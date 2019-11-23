@@ -10,7 +10,7 @@
 #define OFF_COLOR (SDL_Color){0xff,0xff,0xff,0xff}
 #define ON_COLOR  (SDL_Color){0x51,0xd9,0x2b,0xff}
 
-#define NODE_SIZE 4
+#define NODE_SIZE 5
 
 typedef struct component component;
 
@@ -36,9 +36,8 @@ struct component {
 	node in [MAX_IN];
 	node out[MAX_OUT];
 
-	// flag for whether it cares about current
-	// direction through input to output
-	char polarity;
+	// quarter turns clockwise
+	char rotation;
 
 	// optional variable used in component
 	// operation (e.g. on/off flag for a switch)

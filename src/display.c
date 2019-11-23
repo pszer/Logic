@@ -12,14 +12,70 @@ int  CANVAS_WIREFLAG = 0;
 wire CANVAS_WIREMAKE = {0,0,0,0,0,NULL,NULL,0,0,0,0};
 
 int CANVAS_COMPADD=-1;
+int CANVAS_COMPROT=0;
+
+int CANVAS_WIREHOVER = -1;
  
 int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh) {
-	return (x >= rx) && (x <= rx + rw) &&
-	       (y >= ry) && (y <= ry + rh);
+	int a,b;
+	if (rw >= 0) {
+		a = (x >= rx) && (x <= rx + rw);
+	} else {
+		a = (x <= rx) && (x >= rx + rw);
+	}
+
+	if (rh >= 0) {
+		b = (y >= ry) && (y <= ry + rh);
+	} else {
+		b = (y <= ry) && (y >= ry + rh);
+	}
+
+	return a&&b;
 }
 
 int RectMouseCollision(int rx, int ry, int rw, int rh) {
 	return RectPointCollision(MOUSEX, MOUSEY, rx, ry, rw, rh);
+}
+
+int WirePointCollision(int x, int y, wire * w) {
+	/*if (w->parity) {
+		int xm = (w->x1 + w->x2)/2;
+
+		Render_Line(w->x1, w->y1, xm   , w->y1, &C); // --
+		Render_Line(xm   , w->y2, w->x2, w->y2, &C); // --
+
+		Render_Line(xm   , w->y1, xm   , w->y2, &C); // |
+	} else {
+		int ym = (w->y1 + w->y2)/2;
+
+		Render_Line(w->x1, w->y1, w->x1, ym   , &C); // |
+		Render_Line(w->x2, ym   , w->x2, w->y2, &C); // |
+
+		Render_Line(w->x1, ym   , w->x2, ym   , &C); // --
+	}*/
+
+	if (w->parity) {
+		int xm = (w->x1 + w->x2)/2;
+
+		if (RectPointCollision(x,y, w->x1, w->y1-2, (xm-w->x1), 5)) return 1;
+		if (RectPointCollision(x,y, xm   , w->y2-2, (xm-w->x1), 5)) return 1;
+
+		if (RectPointCollision(x,y, xm-2 , w->y1, 5, w->y2-w->y1)) return 1;
+	} else {	
+		int ym = (w->y1 + w->y2)/2;
+
+		if (RectPointCollision(x,y, w->x1-2, w->y1, 5, ym-w->y1)) return 1;
+		if (RectPointCollision(x,y, w->x2-2,    ym, 5, ym-w->y1)) return 1;
+
+		if (RectPointCollision(x,y, w->x1, ym-2, w->x2-w->x1, 5)) return 1;
+
+	}
+
+	return 0;
+}
+
+int WireMouseCollision(wire * w) {
+	return WirePointCollision(MOUSEX, MOUSEY, w);
 }
 
 void Display_Render() {
@@ -36,7 +92,18 @@ void Display_Render() {
 		SDL_Rect r = {MOUSEX-c->w/2, MOUSEY-c->h/2,
 		  c->w, c->h};
 
-		Render_Texture(c->img_off, NULL, &r, SDL_FLIP_NONE);
+		Render_Texture(c->img_off, NULL, &r, CANVAS_COMPROT*90.0);
+	}
+
+	if (CANVAS_WIREHOVER != -1) {
+		wire * w = wires + CANVAS_WIREHOVER;
+
+		int x = (w->x1+w->x2) / 2;
+		int y = (w->y1+w->y2) / 2;
+
+		SDL_Rect r = {x-8,y-8,16,16};
+
+		Render_Texture("img/hover.png", NULL, &r, 0.0);
 	}
 }
 
@@ -44,6 +111,12 @@ void Display_Update() {
 	TOOLBAR_LHOVER=0;
 	TOOLBAR_RHOVER=0;
 	TOOLBAR_COMPHOVER=-1;
+
+	CANVAS_WIREHOVER=-1;
+
+	Display_InputCheckCanvas();
+	Display_InputCheckScrollButtons();
+	Display_InputCheckToolbar();
 
 	if (MOUSE1 == MOUSE_UP) {
 		CANVAS_COMPMOVE = -1;
@@ -53,6 +126,11 @@ void Display_Update() {
 
 		if (CANVAS_COMPADD != -1) {
 			__Display_FinishCompAdd();
+		}
+	} else if (MOUSE1 == MOUSE_DOWN && CANVAS_COMPMOVE == -1) {
+		if (CANVAS_WIREHOVER != -1) {
+			wire * w = wires + CANVAS_WIREHOVER;
+			w->parity = !w->parity;
 		}
 	}
 
@@ -74,13 +152,14 @@ void Display_Update() {
 		CANVAS_WIREMAKE.x2 = MOUSEX;
 		CANVAS_WIREMAKE.y2 = MOUSEY;
 	}
-
-	if (Display_InputCheckCanvas()) return;
-	if (Display_InputCheckScrollButtons()) return;
-	if (Display_InputCheckToolbar()) return;
 }
 
 void Display_RightClick() {
+	if (CANVAS_WIREHOVER != -1) {
+		Logic_DeleteWire(CANVAS_WIREHOVER);
+		return;
+	}
+
 	int i;
 	for (i = 0; i < comp_count; ++i) {
 		component * c = comps+i;
@@ -92,7 +171,6 @@ void Display_RightClick() {
 }
 
 int Display_InputCheckScrollButtons() {
-
 	if (RectMouseCollision(0,TITLE_HEIGHT,TOOLBAR_SCROLL_W,TOOLBAR_HEIGHT)) {
 		TOOLBAR_LHOVER=1;
 
@@ -128,6 +206,7 @@ int Display_InputCheckToolbar() {
 
 	if (MOUSE1 == MOUSE_DOWN && n >= 0 && n < COMP_DEF_COUNT) {
 		CANVAS_COMPADD = n;
+		CANVAS_COMPROT = 0;
 	}
 
 	return 1;
@@ -159,6 +238,13 @@ int Display_InputCheckCanvas() {
 			} else if (MOUSE2 == MOUSE_DOWN) {
 				if (CANVAS_WIREFLAG) continue;
 			}
+		}
+	}
+
+	for (i = 0; i < wire_count; ++i) {
+		if (WireMouseCollision(wires + i)) {
+			CANVAS_WIREHOVER = i;
+			break;
 		}
 	}
 
@@ -239,7 +325,7 @@ void __Display_FinishWireMake() {
 void __Display_FinishCompAdd() {
 	if (MOUSEY > TITLE_HEIGHT + TOOLBAR_HEIGHT) {
 		component * c = COMP_DEFS[CANVAS_COMPADD];
-		Logic_AddComponent(c, MOUSEX-c->w/2, MOUSEY-c->h/2);
+		Logic_AddComponent(c, MOUSEX-c->w/2, MOUSEY-c->h/2, CANVAS_COMPROT);
 	}
 
 	CANVAS_COMPADD = -1;
@@ -293,9 +379,9 @@ void Display_RenderToolbox() {
 		tr.y += (r.h - tr.h)/2;
 
 		if (TOOLBAR_COMPHOVER != i)
-			Render_Texture(COMP_DEFS[i]->img_off, NULL, &tr, SDL_FLIP_NONE);
+			Render_Texture(COMP_DEFS[i]->img_off, NULL, &tr, 0.0);
 		else
-			Render_Texture(COMP_DEFS[i]->img_on, NULL, &tr, SDL_FLIP_NONE);
+			Render_Texture(COMP_DEFS[i]->img_on, NULL, &tr, 0.0);
 
 		SDL_RenderSetViewport(RENDER, NULL);
 	}

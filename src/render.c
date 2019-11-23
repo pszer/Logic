@@ -76,13 +76,13 @@ void Render_Text(const char* text, int x, int y, int align, SDL_Color* c) {
 
 /* renders texture by texture name */
 void Render_Texture(char * tname,
-	SDL_Rect* src, SDL_Rect* dest, SDL_RendererFlip flip)
+	SDL_Rect* src, SDL_Rect* dest, double rotation)
 {
 	texture * t = Texture_Get(tname);	
 	if (!t) return;
 
 	SDL_RenderCopyEx(RENDER, t->img,
-	  src, dest, 0.0, NULL, flip);
+	  src, dest, rotation, NULL, SDL_FLIP_NONE);
 }
 
 void Render_Component(component* c) {
@@ -110,11 +110,12 @@ void Render_Component(component* c) {
 		return;
 	} else {
 		SDL_Rect rect = {c->x, c->y, c->w, c->h};
+		double rot = c->rotation * 90.0;
 
 		if (!c->state && c->img_off)
-			Render_Texture(c->img_off,NULL,&rect,SDL_FLIP_NONE);
+			Render_Texture(c->img_off,NULL,&rect,rot);
 		if (c->state && c->img_on)
-			Render_Texture(c->img_on,NULL,&rect,SDL_FLIP_NONE);
+			Render_Texture(c->img_on,NULL,&rect,rot);
 	}
 }
 

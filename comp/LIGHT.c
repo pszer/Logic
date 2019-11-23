@@ -23,7 +23,7 @@ component c_LIGHT = {
 	{{0, 0 , 16}}, //nodes in 
 	{}, //nodes out
 
-	1, //char polarity;
+	0, //int rotation;
 	0, //int var;
 
 	update, //void (*update)(component*);

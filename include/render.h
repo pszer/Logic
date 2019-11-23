@@ -44,7 +44,7 @@ void Render_Text(const char* text, int x, int y, int align, SDL_Color* c);
 
 /* renders texture by texture name */
 void Render_Texture(char * tname,
-	SDL_Rect* src, SDL_Rect* dest, SDL_RendererFlip flip);
+	SDL_Rect* src, SDL_Rect* dest, double rotation);
 
 void Render_Component(component* c);
 void Render_Wire(wire* w);

@@ -28,7 +28,7 @@ component c_SWITCH = {
 	{}, //nodes in 
 	{{0, 32, 16}}, //nodes out
 
-	1, //char polarity;
+	0, //int rotation;
 	0, //int var;
 
 	update, //void (*update)(component*);

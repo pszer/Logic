@@ -32,9 +32,13 @@ extern wire CANVAS_WIREMAKE;
 // otherwise its the component type index
 extern int CANVAS_COMPADD;
 
+extern int CANVAS_WIREHOVER;
+
 
 int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh);
 int RectMouseCollision(int rx, int ry, int rw, int rh);
+int WirePointCollision(int x, int y, wire * w);
+int WireMouseCollision(wire * w);
 
 void Display_Render();
 void Display_RenderTitle();

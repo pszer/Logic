@@ -48,7 +48,7 @@ void Logic_AllocateWires(int size);
 void Logic_FreeComponents();
 void Logic_FreeWires();
 
-void Logic_AddComponent(const component* comp_type, int x, int y);
+void Logic_AddComponent(const component* comp_type, int x, int y, char rotation);
 void Logic_AddWire(component* a, component* b, int n1, int n2, int parity);
 
 void Logic_DeleteComponent(int index);

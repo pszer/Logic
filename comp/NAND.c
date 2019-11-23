@@ -24,7 +24,7 @@ component c_NAND = {
 	{{0, 0 , 6}, {0, 0, 18} }, //nodes in 
 	{{0, 24, 12}}, //nodes out
 
-	1, //char polarity;
+	0, //int rotation;
 	0, //int var;
 
 	update,       //void (*update)(component*);
