@@ -1,2 +1,3 @@
 logic
-src/obj/
+src/obj/*
+comp/so/*
