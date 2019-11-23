@@ -1,6 +1,2 @@
 logic
-src/obj/*
-comp/so/*
-!src/obj/
-!comp
-!comp/so/
+
