@@ -13,6 +13,21 @@ Left click on a placed wire to change its shape.
 
 Some components can be clicked.
 
+# Building
+
+To build simply use
+```
+build
+```
+
+and launch with
+```
+./logic
+```
+
+Libraries required are 'SDL2', 'SDL2_imag'e and 'SDL2_ttf'.
+Check your distribution mantainer for how to install these libraries.
+
 # Custom Components
 The simulator builds all the components stored in the 'comps/' folder.
 It builds the C file and calls __load__() to get the component defined in the file.

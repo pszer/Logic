@@ -120,10 +120,10 @@ void Logic_AllocateComponents(int size) {
 
 void Logic_AllocateWires(int size) {
 	if (!wires) {
-		wires = malloc(size * sizeof(wires));
+		wires = malloc(size * sizeof(wire));
 		wire_size = size;
 	} else {
-		wires = realloc(comps, size * sizeof(wires));
+		wires = realloc(wires, size * sizeof(wire));
 		wire_size = size;
 	}
 }
@@ -190,6 +190,24 @@ void Logic_DeleteWire(int index) {
 
 void Logic_AddWire(component* a, component* b, int n1, int n2, int parity) {
 	if (!(a&&b)) return;
+
+	// stop output->output or input->input wire
+	if (n1>=0 && n2>= 0) return;
+	if (n1<0 && n2< 0) return;
+
+	int i;
+	for (int i = 0; i < wire_count; ++i) {
+		wire * w = wires + i;
+
+		if (n1 < 0) {
+			if (w->n1==n1 && w->c1==a) return;
+			if (w->n2==n1 && w->c2==a) return;
+		}
+		if (n2 < 0) {
+			if (w->n1==n2 && w->c1==b) return;
+			if (w->n2==n2 && w->c2==b) return;
+		}
+	}
 
 	if (wire_count == wire_size)
 		Logic_AllocateWires(comp_size*2+1);

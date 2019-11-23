@@ -70,6 +70,7 @@ int Core_Init(int argc, char ** argv) {
 
 #define FREE(f,x) if(x)f(x);
 void Core_Quit() {
+	Logic_FreeDefines();
 	Logic_FreeComponents();
 	Logic_FreeWires();
 
@@ -110,10 +111,10 @@ void Core_Render() {
 	Render_Clear();
 
 	int i;
-	for (i = 0; i < comp_count; ++i)
-		Render_Component(comps + i);
 	for (i = 0; i < wire_count; ++i)
 		Render_Wire(wires + i);
+	for (i = 0; i < comp_count; ++i)
+		Render_Component(comps + i);
 
 	Display_Render();
 	
