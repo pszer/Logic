@@ -64,7 +64,7 @@ component c_AND = {
 	0, //int var;
 
 	update,       //void (*update)(component*);
-	NULL,         //void (*render)(component*);
+	NULL,         //void (*render)(component*, SDL_Renderer*, texture*, int);
 	NULL          //void (*click) (component*, int, int);
 };
 
@@ -92,7 +92,8 @@ The three last entries are function pointers, they are all optional, but you wil
 update function 99.9% guaranteed.
 The update function is called every frame.
 The render function is called when the component is being rendered, allowing for custom rendering
-(if a render function is set, the components image will NOT be drawn, only its nodes).
+(if a render function is set, the components image will NOT be drawn, only its nodes). The arguments given
+are the rendering context, an array to the current loaded textures and how many textures are loaded.
 The click function is called when a component is left clicked, the second argument is the STATE,
 -1 for inital left button click frame, 0 for when it's held and 1 for the button up frame. The
 last argument is how long the button has been held for.
@@ -103,4 +104,3 @@ not work.**
 **__load__() MUST return a pointer to the components struct specification you just made**
 
 'include/comp.h' is pre-included for you.
-Rendering functions are available in 'include/render.h' if you want custom rendering.

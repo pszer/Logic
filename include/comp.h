@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-#include <SDL2/SDL_rect.h>
+#include "tex.h"
 
 #define MAX_IN  8
 #define MAX_OUT 8
@@ -45,7 +45,7 @@ struct component {
 
 	/* optional functions */
 	void (*update)(component*);
-	void (*render)(component*);
+	void (*render)(component*, SDL_Renderer*, texture*, int);
 	//                        button ms
 	void (*click) (component*, int, int);
 };

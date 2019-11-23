@@ -106,7 +106,7 @@ void Render_Component(component* c) {
 
 	// render component
 	if (c->render) {
-		c->render(c);
+		c->render(c, RENDER, textures, textures_loaded);
 		return;
 	} else {
 		SDL_Rect rect = {c->x, c->y, c->w, c->h};
