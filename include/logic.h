@@ -3,6 +3,7 @@
 #include <dirent.h>
 #include <dlfcn.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "comp.h"
 

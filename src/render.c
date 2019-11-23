@@ -125,14 +125,14 @@ void Render_Wire(wire* w) {
 	SDL_Color C = w->state ? ON_COLOR : OFF_COLOR;
 
 	if (w->parity) {
-		int xm = (w->x1 + w->x2)/2;
+		int xm = (w->x1 + w->x2 - 1)/2;
 
 		Render_Line(w->x1, w->y1, xm   , w->y1, &C); // --
 		Render_Line(xm   , w->y2, w->x2, w->y2, &C); // --
 
 		Render_Line(xm   , w->y1, xm   , w->y2, &C); // |
 	} else {
-		int ym = (w->y1 + w->y2)/2;
+		int ym = (w->y1 + w->y2 - 1)/2;
 
 		Render_Line(w->x1, w->y1, w->x1, ym   , &C); // |
 		Render_Line(w->x2, ym   , w->x2, w->y2, &C); // |

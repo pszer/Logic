@@ -1,6 +1,7 @@
 #include <string.h>
 
-#include "render.h"
+#include <SDL2/SDL.h>
+#include "tex.h"
 
 #define NAME "COUNTER"
 #define IOFF "img/counter.png"

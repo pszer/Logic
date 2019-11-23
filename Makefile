@@ -1,6 +1,6 @@
 IDIR =include
 CC=clang
-CFLAGS=-I$(IDIR) -std=c99 -O3 -D_DEFAULT_SOURCE
+CFLAGS=-I$(IDIR) -std=c11 -O3 -D_DEFAULT_SOURCE
 
 ODIR=src/obj
 SDIR=src

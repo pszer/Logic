@@ -104,3 +104,9 @@ not work.**
 **__load__() MUST return a pointer to the components struct specification you just made**
 
 'include/comp.h' is pre-included for you.
+For custom rendering capabilities you must put
+```
+#include <SDL2/SDL.h>
+#include "tex.h"
+```
+in your component file.

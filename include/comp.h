@@ -2,7 +2,10 @@
 
 #include <stdlib.h>
 
-#include "tex.h"
+//#include "tex.h"
+typedef struct texture texture;
+typedef struct SDL_Texture SDL_Texture;
+typedef struct SDL_Renderer SDL_Renderer;
 
 #define MAX_IN  8
 #define MAX_OUT 8
