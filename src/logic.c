@@ -39,6 +39,10 @@ int Logic_DefineCompFile(const char * fname) {
 	const int cpso_len = strlen(COMP_SO_PATH);
 	const int fn_len   = strlen(fname);
 
+	if (!(fname[fn_len-1] == 'c' || fname[fn_len-1] == 'C')) {
+		return 0;
+	}
+
 	const int path_len = cp_len + fn_len + 2;
 	char* path = malloc( sizeof(char) * path_len);
 

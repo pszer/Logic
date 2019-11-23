@@ -24,8 +24,8 @@ int Texture_LoadFolder(SDL_Renderer * r, char * folder) {
 			memcpy(str+folder_length+1, dir->d_name, strlen(dir->d_name)+1);
 
 			int state = Texture_Load(r, str);
-			if (state)
-				printf("Loaded %s\n", str);
+			//if (state)
+			//	printf("Loaded %s\n", str);
 
 			if (state) ++count;
 
