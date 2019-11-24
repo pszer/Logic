@@ -12,8 +12,8 @@
 
 #define MAX_COMP_DEFS 64
 
-#define START_COMP_SIZE 64
-#define START_WIRE_SIZE 64
+#define START_COMP_SIZE 32
+#define START_WIRE_SIZE 32
 
 // standard components used in
 // construction

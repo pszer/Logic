@@ -117,8 +117,18 @@ void Logic_AllocateComponents(int size) {
 		comps = malloc(size * sizeof(component));
 		comp_size = size;
 	} else {
+		component * old = comps;
+
 		comps = realloc(comps, size * sizeof(component));
 		comp_size = size;
+
+		// adjust wire component pointers
+		int i;
+		for (i = 0; i < wire_count; ++i) {
+			wire * w = wires + i;
+			w->c1 = comps + (w->c1 - old);
+			w->c2 = comps + (w->c2 - old);
+		}
 	}
 }
 
