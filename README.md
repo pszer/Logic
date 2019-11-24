@@ -25,12 +25,12 @@ and launch with
 ./logic
 ```
 
-Libraries required are 'SDL2', 'SDL2_imag'e and 'SDL2_ttf'.
+Libraries required are 'SDL2', 'SDL2_image' and 'SDL2_ttf'.
 Check your distribution mantainer for how to install these libraries.
 
 # Custom Components
 The simulator builds all the components stored in the 'comps/' folder.
-It builds the C file and calls __load__() to get the component defined in the file.
+It builds the C file and calls \__load\__() to get the component defined in the file.
 
 Example File (AND.c)
 ```
@@ -38,7 +38,7 @@ Example File (AND.c)
 #define IOFF "img/AND.png"
 #define ION  "img/ANDon.png"
 
-//void render(component*);
+//void render(component*, SDL_Renderer* R, texture* texs, int tex_count);
 //void click (component*, int state, int ms);
 
 void update(component* c) {
@@ -101,7 +101,7 @@ last argument is how long the button has been held for.
 **These functions MUST be called 'update', 'render' and 'click' respectively otherwise they will
 not work.**
 
-**__load__() MUST return a pointer to the components struct specification you just made**
+**\__load\__() MUST return a pointer to the components struct specification you just made**
 
 'include/comp.h' is pre-included for you.
 For custom rendering capabilities you must put
