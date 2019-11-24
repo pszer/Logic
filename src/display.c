@@ -156,11 +156,6 @@ void Display_Update() {
 }
 
 void Display_RightClick() {
-	if (CANVAS_WIREHOVER != -1) {
-		Logic_DeleteWire(CANVAS_WIREHOVER);
-		return;
-	}
-
 	if (CANVAS_COMPADD != -1) {
 		CANVAS_COMPROT++;
 		CANVAS_COMPROT %= 4;
@@ -171,6 +166,11 @@ void Display_RightClick() {
 		component * c = comps + CANVAS_COMPMOVE;
 		c->rotation++;
 		c->rotation %= 4;
+		return;
+	}
+
+	if (CANVAS_WIREHOVER != -1) {
+		Logic_DeleteWire(CANVAS_WIREHOVER);
 		return;
 	}
 

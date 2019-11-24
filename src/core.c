@@ -33,8 +33,7 @@ int Core_Init(int argc, char ** argv) {
 	WIN_H = DEF_WIN_H;
 	WINDOW = SDL_CreateWindow("logic",
 	  SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-	  //WIN_W, WIN_H, SDL_WINDOW_RESIZABLE);
-	  WIN_W, WIN_H, SDL_WINDOW_SHOWN);
+	  WIN_W, WIN_H, SDL_WINDOW_RESIZABLE);
 	if (!WINDOW)
 		ERR();
 
