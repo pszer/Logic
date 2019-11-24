@@ -248,6 +248,8 @@ void Logic_AddWire(component* a, component* b, int n1, int n2, int parity) {
 }
 
 void Logic_Update() {
+	Logic_NullInputNodes();
+
 	for (int i = 0; i < wire_count; ++i) {
 		wire * w = wires + i;
 
@@ -263,6 +265,16 @@ void Logic_Update() {
 	}
 
 	Logic_UpdateComponents();
+}
+
+void Logic_NullInputNodes() {
+	int i,j;
+	for (i = 0; i < comp_count; ++i) {
+		component * c = comps + i;
+		for (j = 0; j < c->in_count; ++j) {
+			c->in[j].state = 0;
+		}
+	}
 }
 
 void Logic_UpdateComponents() {

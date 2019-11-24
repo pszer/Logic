@@ -56,6 +56,7 @@ void Logic_DeleteComponent(int index);
 void Logic_DeleteWire(int index);
 
 void Logic_Update();
+void Logic_NullInputNodes();
 void Logic_UpdateComponents();
 
 void Logic_UpdateAllWirePos();
