@@ -30,7 +30,7 @@ Check your distribution mantainer for how to install these libraries.
 
 # Custom Components
 The simulator builds all the components stored in the 'comps/' folder.
-It builds the C file and calls \__load\__() to get the component defined in the file.
+It builds the C file and calls \_\_load\_\_() to get the component defined in the file.
 
 Example File (AND.c)
 ```
@@ -101,7 +101,7 @@ last argument is how long the button has been held for.
 **These functions MUST be called 'update', 'render' and 'click' respectively otherwise they will
 not work.**
 
-**\__load\__() MUST return a pointer to the components struct specification you just made**
+**\_\_load\_\_() MUST return a pointer to the components struct specification you just made**
 
 'include/comp.h' is pre-included for you.
 For custom rendering capabilities you must put
