@@ -171,7 +171,12 @@ void Logic_DeleteComponent(int index) {
 		wire * w = wires+i;
 		if (w->c1==c || w->c2==c) {
 			Logic_DeleteWire(i);
-		} else ++i;
+		} else {
+			if (w->c1-comps > index) --w->c1;
+			if (w->c2-comps > index) --w->c2;
+
+			++i;
+		}
 	}
 
 	for (i = index; i < comp_count-1; ++i) {
