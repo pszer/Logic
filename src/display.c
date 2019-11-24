@@ -140,11 +140,7 @@ void Display_Update() {
 	}
 
 	if (MOUSE2 == MOUSE_DOWN) {
-		if (CANVAS_COMPMOVE==-1 && !CANVAS_WIREFLAG &&
-		    CANVAS_COMPADD==-1)
-		{
-			Display_RightClick();
-		}
+		Display_RightClick();
 	}
 
 	if (CANVAS_COMPMOVE != -1) {
@@ -164,6 +160,21 @@ void Display_RightClick() {
 		Logic_DeleteWire(CANVAS_WIREHOVER);
 		return;
 	}
+
+	if (CANVAS_COMPADD != -1) {
+		CANVAS_COMPROT++;
+		CANVAS_COMPROT %= 4;
+		return;
+	}
+
+	if (CANVAS_COMPMOVE != -1) {
+		component * c = comps + CANVAS_COMPMOVE;
+		c->rotation++;
+		c->rotation %= 4;
+		return;
+	}
+
+	if (CANVAS_WIREFLAG) return;
 
 	int i;
 	for (i = 0; i < comp_count; ++i) {
@@ -209,9 +220,13 @@ int Display_InputCheckToolbar() {
 	int n = (MOUSEX - TOOLBAR_SCROLL_W) / (TOOLBAR_HEIGHT-1) + TOOLBAR_SCROLL;
 	TOOLBAR_COMPHOVER = n;
 
-	if (MOUSE1 == MOUSE_DOWN && n >= 0 && n < COMP_DEF_COUNT) {
-		CANVAS_COMPADD = n;
-		CANVAS_COMPROT = 0;
+	if (n >= 0 && n < COMP_DEF_COUNT) {
+		if (MOUSE1 == MOUSE_DOWN) {
+			CANVAS_COMPADD = n;
+			CANVAS_COMPROT = 0;
+		}
+	} else {
+		TOOLBAR_COMPHOVER = -1;
 	}
 
 	return 1;
@@ -369,7 +384,7 @@ void Display_RenderToolbox() {
 
 	// render component icons
 	int i = TOOLBAR_SCROLL,
-	    end = (WIN_W-TOOLBAR_SCROLL_W)/TOOLBAR_HEIGHT;
+	    end = (WIN_W-TOOLBAR_SCROLL_W)/TOOLBAR_HEIGHT + TOOLBAR_SCROLL;
 	for (; i <= end && i < COMP_DEF_COUNT; ++i) {
 		int offset = (i-TOOLBAR_SCROLL)*(TOOLBAR_HEIGHT-2)
 		  + TOOLBAR_SCROLL_W;

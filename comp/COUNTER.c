@@ -45,6 +45,12 @@ void update(component* c) {
 	         c->in[1].state*0x04 +
 	         c->in[2].state*0x02 +
 	         c->in[3].state*0x01;
+
+	// fix rotation to 0 or 180 degrees
+	if (c->rotation==1)
+		c->rotation=2;
+	if (c->rotation==3)
+		c->rotation=0;
 }
 
 component c_COUNTER = {
