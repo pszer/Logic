@@ -105,6 +105,11 @@ void Display_Render() {
 
 		Render_Texture("img/hover.png", NULL, &r, 0.0);
 	}
+
+	if (TOOLBAR_COMPHOVER != -1) {
+		Display_DrawTextbox(COMP_DEFS[TOOLBAR_COMPHOVER]->name,
+		  MOUSEX, MOUSEY);
+	}
 }
 
 void Display_Update() {
@@ -329,6 +334,19 @@ void __Display_FinishCompAdd() {
 	}
 
 	CANVAS_COMPADD = -1;
+}
+
+void Display_DrawTextbox(const char * text, int x, int y) {
+	int w,h;
+
+	TTF_SizeText(FONT, text, &w, &h);
+
+	SDL_Color BG = {0x00,0x00,0x00,0xff};
+	SDL_Color FG = {0xff,0xff,0xff,0xff};
+
+	Render_Rect(x, y-h-1, w+3, h+2, &BG);
+	Render_Text(text, x+2, y-h, ALIGN_LEFT, &FG);
+	Render_RectLine(x, y-h-1, w+3, h+2, &FG);
 }
 
 void Display_RenderTitle() {

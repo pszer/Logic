@@ -46,6 +46,8 @@ void Display_RenderToolbox();
 
 void Display_Update();
 
+void Display_DrawTextbox(const char * text, int x, int y);
+
 // returns 1 if input detected
 int Display_InputCheckScrollButtons();
 int Display_InputCheckToolbar();
