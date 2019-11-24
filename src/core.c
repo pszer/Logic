@@ -113,6 +113,8 @@ void Core_Main() {
 void Core_Render() {
 	Render_Clear();
 
+	Display_RenderGrid();
+
 	int i;
 	for (i = 0; i < wire_count; ++i)
 		Render_Wire(wires + i);

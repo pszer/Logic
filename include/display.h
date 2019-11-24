@@ -16,6 +16,9 @@
 
 #define TOOLBAR_SCROLL_W 10
 
+#define GRID_COLOR {0x25,0x25,0x25,0xff}
+#define GRID_SIZE 16
+
 extern int TOOLBAR_SCROLL;
 extern int TOOLBAR_LHOVER, TOOLBAR_RHOVER;
 extern int TOOLBAR_COMPHOVER;
@@ -43,6 +46,7 @@ int WireMouseCollision(wire * w);
 void Display_Render();
 void Display_RenderTitle();
 void Display_RenderToolbox();
+void Display_RenderGrid();
 
 void Display_Update();
 

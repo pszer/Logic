@@ -439,3 +439,14 @@ void Display_RenderToolbox() {
 	  WIN_W, TITLE_HEIGHT+TOOLBAR_HEIGHT+1, &c);
 }
 
+void Display_RenderGrid() {
+	int x,y;
+	SDL_Color GC = GRID_COLOR;
+
+	for (y = GRID_SIZE+TOOLBAR_HEIGHT+TITLE_HEIGHT; y < WIN_H; y += GRID_SIZE) {
+		for (x = GRID_SIZE; x < WIN_W; x += GRID_SIZE) {
+			Render_Line(x,0,x,WIN_H, &GC);
+			Render_Line(0,y,WIN_W,y, &GC);
+		}
+	}
+}
