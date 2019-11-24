@@ -86,9 +86,9 @@ each node specification in the nodes in and nodes out array has the format of:
 ```
 The offset is the offset from the parent components position.
 
-'rotation' is the orientation of the component. If you don't want your component to rotate, you can put set it 0 everytime in the update function.
+'rotation' is the orientation of the component. If you don't want your component to rotate, you can set it to 0 everytime in the update function.
 
-'var' is an integer variable that can be used for computation in your components operation.
+'var' is an integer variable that can be used for computation in your components operation (e.g. its used to store the number in the counter).
 
 The three last entries are function pointers, they are all optional, but you will want an
 update function 99.9% guaranteed.
