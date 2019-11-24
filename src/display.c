@@ -342,19 +342,14 @@ void Display_RenderTitle() {
 void Display_RenderToolbox() {
 	SDL_Color BG = TOOLBAR_BG;
 
-	Render_Rect(0, TITLE_HEIGHT, WIN_W, TOOLBAR_HEIGHT, &BG);
-
 	SDL_Color c = TOOLBAR_FG,
 	          h = TOOLBAR_HOVER_C;
 
-	Render_Rect(2, TITLE_HEIGHT+2,
-	            TOOLBAR_SCROLL_W-4, TOOLBAR_HEIGHT-4, TOOLBAR_LHOVER?&h:&c);
-	Render_Rect(WIN_W-2, TITLE_HEIGHT+2,
-	            -TOOLBAR_SCROLL_W+4, TOOLBAR_HEIGHT-4,TOOLBAR_RHOVER?&h:&c);
-	Render_Rect(WIN_W-TOOLBAR_SCROLL_W-2,TITLE_HEIGHT,2,TOOLBAR_HEIGHT,&c);
 
-	// arrow
+	// render background
+	Render_Rect(0, TITLE_HEIGHT, WIN_W, TOOLBAR_HEIGHT, &BG);
 
+	// render component icons
 	int i = TOOLBAR_SCROLL,
 	    end = (WIN_W-TOOLBAR_SCROLL_W)/TOOLBAR_HEIGHT;
 	for (; i <= end && i < COMP_DEF_COUNT; ++i) {
@@ -385,6 +380,25 @@ void Display_RenderToolbox() {
 
 		SDL_RenderSetViewport(RENDER, NULL);
 	}
+
+	// render borders and buttons
+	
+	// LEFT BUTTON
+	Render_Rect(0, TITLE_HEIGHT,
+	            TOOLBAR_SCROLL_W, TOOLBAR_HEIGHT, &BG);
+	Render_Rect(2, TITLE_HEIGHT+2,
+	            TOOLBAR_SCROLL_W-4, TOOLBAR_HEIGHT-4, TOOLBAR_LHOVER?&h:&c);
+
+	// RIGHT BUTTON
+	Render_Rect(WIN_W, TITLE_HEIGHT,
+	            -TOOLBAR_SCROLL_W, TOOLBAR_HEIGHT, &BG);
+	Render_Rect(WIN_W-2, TITLE_HEIGHT+2,
+	            -TOOLBAR_SCROLL_W+4, TOOLBAR_HEIGHT-4,TOOLBAR_RHOVER?&h:&c);
+
+	// RIGHT BUTTON BLACK BUFFER
+	Render_Rect(WIN_W-TOOLBAR_SCROLL_W-2, TITLE_HEIGHT, -2, TOOLBAR_HEIGHT, &BG);
+
+	Render_Rect(WIN_W-TOOLBAR_SCROLL_W-2,TITLE_HEIGHT,2,TOOLBAR_HEIGHT,&c);
 
 	Render_Line(0, TITLE_HEIGHT+TOOLBAR_HEIGHT,
 	  WIN_W, TITLE_HEIGHT+TOOLBAR_HEIGHT, &c);
