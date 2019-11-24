@@ -11,6 +11,8 @@ Right click on a component/wire to destroy it.
 Right click while making a wire to change its shape.
 Left click on a placed wire to change its shape.
 
+Right click while moving a component to rotate it.
+
 Some components can be clicked.
 
 # Building
