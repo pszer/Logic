@@ -28,9 +28,9 @@ File format is specified in the include/save.h header file.
 
 # Building
 
-To build simply use
+To build simply do
 ```
-build
+make
 ```
 
 and launch with
