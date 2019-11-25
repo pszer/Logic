@@ -95,7 +95,7 @@ component c_TALLY = {
 	update,       //void (*update)(component*);
 	render,       //void (*render)(component*);
 	NULL,         //void (*click) (component*, int, int);
-	destroy       //void (*destroy)(component*);
+	NULL          //void (*destroy)(component*);
 };
 
 component* __load__() {
