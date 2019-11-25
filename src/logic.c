@@ -11,6 +11,8 @@ component* comps = NULL;
 int wire_count = 0, wire_size = 0;
 wire* wires = NULL;
 
+int LOGIC_PAUSE = 0;
+
 void Logic_DefineComps() {
 	DIR * d;
 	struct dirent * dir;
@@ -151,10 +153,14 @@ void Logic_FreeDefines() {
 
 void Logic_FreeComponents() {
 	if (comps) free(comps);
+	comp_count = 0;
+	comps = NULL;
 }
 
 void Logic_FreeWires() {
 	if (wires) free(wires);
+	wire_count = 0;
+	wires = NULL;
 }
 
 void Logic_AddComponent(const component* comp_type, int x, int y, char rotation) {
@@ -247,7 +253,17 @@ void Logic_AddWire(component* a, component* b, int n1, int n2, int parity) {
 	++wire_count;
 }
 
+void Logic_DeleteAll() {
+	Logic_FreeComponents();
+	Logic_FreeWires();
+
+	Logic_AllocateComponents(START_COMP_SIZE);
+	Logic_AllocateWires(START_WIRE_SIZE);
+}
+
 void Logic_Update() {
+	if (LOGIC_PAUSE) return;
+
 	Logic_NullInputNodes();
 
 	for (int i = 0; i < wire_count; ++i) {

@@ -72,15 +72,14 @@ typedef struct wire {
 	// <= -1 is an input node  (index will be -n-1)
 	int n1, n2; 
 
-	// for whether wire rendered going out from
-	// point1 is horizontal or not
+	// wire shape
 	//
-	//  parity=0  |  parity=1
-	//            | 
-	//      |--p2 |      p2
-	//      |     |  ____|  
-	//      |     |  |
-	//  p1--|     |  p1
+	//  parity=0  |  parity=1 |  parity=2 |  parity=3
+	//            |           |           |
+	//      |--p2 |      p2   |       p2  |  -----p2
+	//      |     |  ____|    |       |   |  |
+	//      |     |  |        |       |   |  |
+	//  p1--|     |  p1       |  p1---|   |  p1
 	//
 	char parity;
 

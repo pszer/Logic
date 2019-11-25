@@ -15,6 +15,12 @@ int CANVAS_COMPADD=-1;
 int CANVAS_COMPROT=0;
 
 int CANVAS_WIREHOVER = -1;
+
+SDL_Rect TITLE_DELETE = { 26,0,12,12 };
+SDL_Rect TITLE_GRID   = { 13,0,12,12 };
+SDL_Rect TITLE_PAUSE  = { 0, 0,12,12 };
+
+int GRID_FLAG = 1;
  
 int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh) {
 	int a,b;
@@ -38,37 +44,41 @@ int RectMouseCollision(int rx, int ry, int rw, int rh) {
 }
 
 int WirePointCollision(int x, int y, wire * w) {
-	/*if (w->parity) {
-		int xm = (w->x1 + w->x2)/2;
-
-		Render_Line(w->x1, w->y1, xm   , w->y1, &C); // --
-		Render_Line(xm   , w->y2, w->x2, w->y2, &C); // --
-
-		Render_Line(xm   , w->y1, xm   , w->y2, &C); // |
-	} else {
-		int ym = (w->y1 + w->y2)/2;
-
-		Render_Line(w->x1, w->y1, w->x1, ym   , &C); // |
-		Render_Line(w->x2, ym   , w->x2, w->y2, &C); // |
-
-		Render_Line(w->x1, ym   , w->x2, ym   , &C); // --
-	}*/
-
-	if (w->parity) {
+	//
+	//  parity=0  |  parity=1 |  parity=2 |  parity=3
+	//            |           |           |
+	//      |--p2 |      p2   |       p2  |  -----p2
+	//      |     |  ____|    |       |   |  |
+	//      |     |  |        |       |   |  |
+	//  p1--|     |  p1       |  p1---|   |  p1
+	//
+	//
+	if (w->parity == 0) {
 		int xm = (w->x1 + w->x2)/2;
 
 		if (RectPointCollision(x,y, w->x1, w->y1-2, (xm-w->x1), 5)) return 1;
 		if (RectPointCollision(x,y, xm   , w->y2-2, (xm-w->x1), 5)) return 1;
 
 		if (RectPointCollision(x,y, xm-2 , w->y1, 5, w->y2-w->y1)) return 1;
-	} else {	
+	} else if (w->parity == 1) {	
 		int ym = (w->y1 + w->y2)/2;
 
 		if (RectPointCollision(x,y, w->x1-2, w->y1, 5, ym-w->y1)) return 1;
 		if (RectPointCollision(x,y, w->x2-2,    ym, 5, ym-w->y1)) return 1;
 
 		if (RectPointCollision(x,y, w->x1, ym-2, w->x2-w->x1, 5)) return 1;
+	} else if (w->parity == 2) {
+		int xw = w->x2-w->x1;
+		int yw = w->y2-w->y1;
 
+		if (RectPointCollision(x,y, w->x1, w->y1-2, xw, 5)) return 1;
+		if (RectPointCollision(x,y, w->x2-2, w->y1, 5, yw)) return 1;
+	} else {
+		int xw = w->x2-w->x1;
+		int yw = w->y2-w->y1;
+
+		if (RectPointCollision(x,y, w->x1-2, w->y1, 5, yw)) return 1;
+		if (RectPointCollision(x,y, w->x1, w->y2-2, xw, 5)) return 1;
 	}
 
 	return 0;
@@ -98,11 +108,16 @@ void Display_Render() {
 	if (CANVAS_WIREHOVER != -1) {
 		wire * w = wires + CANVAS_WIREHOVER;
 
-		int x = (w->x1+w->x2) / 2;
-		int y = (w->y1+w->y2) / 2;
-
-		SDL_Rect r = {x-8,y-8,16,16};
-
+		SDL_Rect r;
+		if (w->parity < 2) {
+			int x = (w->x1+w->x2) / 2;
+			int y = (w->y1+w->y2) / 2;
+			r = (SDL_Rect){x-8,y-8,16,16};
+		} else if (w->parity == 2) {
+			r = (SDL_Rect){w->x2-8,w->y1-8,16,16};
+		} else {
+			r = (SDL_Rect){w->x1-8,w->y2-8,16,16};
+		}
 		Render_Texture("img/hover.png", NULL, &r, 0.0);
 	}
 
@@ -122,6 +137,7 @@ void Display_Update() {
 	Display_InputCheckCanvas();
 	Display_InputCheckScrollButtons();
 	Display_InputCheckToolbar();
+	Display_InputCheckTitleBar();
 
 	if (MOUSE1 == MOUSE_UP) {
 		CANVAS_COMPMOVE = -1;
@@ -135,7 +151,7 @@ void Display_Update() {
 	} else if (MOUSE1 == MOUSE_DOWN && CANVAS_COMPMOVE == -1) {
 		if (CANVAS_WIREHOVER != -1) {
 			wire * w = wires + CANVAS_WIREHOVER;
-			w->parity = !w->parity;
+			w->parity = (w->parity+1) % 4;
 		}
 	}
 
@@ -169,12 +185,14 @@ void Display_RightClick() {
 		return;
 	}
 
+	if (CANVAS_WIREFLAG) {
+		CANVAS_WIREMAKE.parity = (CANVAS_WIREMAKE.parity+1)%4;
+	}
+
 	if (CANVAS_WIREHOVER != -1) {
 		Logic_DeleteWire(CANVAS_WIREHOVER);
 		return;
 	}
-
-	if (CANVAS_WIREFLAG) return;
 
 	int i;
 	for (i = 0; i < comp_count; ++i) {
@@ -184,6 +202,25 @@ void Display_RightClick() {
 			return;
 		}
 	}
+}
+
+int Display_InputCheckTitleBar() {
+	if (MOUSEY > TITLE_HEIGHT) return 0;
+	if (MOUSE1 != MOUSE_DOWN) return 0;
+
+	#define UNRECT(r) r.x, r.y, r.w, r.h
+
+	if (RectMouseCollision( UNRECT(TITLE_PAUSE) )) {
+		LOGIC_PAUSE = !LOGIC_PAUSE;
+	} else if (RectMouseCollision( UNRECT(TITLE_GRID) )) {
+		GRID_FLAG = !GRID_FLAG;
+	} else if (RectMouseCollision( UNRECT(TITLE_DELETE) )) {
+		Logic_DeleteAll();
+	}
+
+	#undef UNRECT
+
+	return 1;
 }
 
 int Display_InputCheckScrollButtons() {
@@ -234,10 +271,6 @@ int Display_InputCheckToolbar() {
 
 int Display_InputCheckCanvas() {
 	if (MOUSEY < TITLE_HEIGHT + TOOLBAR_HEIGHT) return 0;
-
-	if (MOUSE2 == MOUSE_DOWN && CANVAS_WIREFLAG) {
-		CANVAS_WIREMAKE.parity = !CANVAS_WIREMAKE.parity;
-	}
 
 	int i;
 	for (i = 0; i < comp_count; ++i) {
@@ -369,7 +402,24 @@ void Display_RenderTitle() {
 	SDL_Color FG = TITLE_FG;
 	Render_Rect(0, 0, WIN_W, TITLE_HEIGHT, &BG);
 
-	Render_Text("Logic", (SDL_GetTicks()/20) % (WIN_W+100)-50,0, ALIGN_LEFT, &FG);
+	static int count = 0;
+	if (!LOGIC_PAUSE)
+		++count;
+
+	SDL_Rect VP = {40,0,WIN_W,TITLE_HEIGHT};
+	SDL_RenderSetViewport(RENDER, &VP);
+	Render_Text("Logic", (count) % (WIN_W+100)-50,0, ALIGN_LEFT, &FG);
+	SDL_RenderSetViewport(RENDER, NULL);
+
+	// render buttons
+	// pause/play button
+	Render_Texture(LOGIC_PAUSE ? TITLE_PAUSE_IMG : TITLE_PLAY_IMG,
+		NULL, &TITLE_PAUSE, 0.0);
+	// grid on/off button
+	Render_Texture(GRID_FLAG ? TITLE_GRIDON_IMG : TITLE_GRIDOFF_IMG,
+		NULL, &TITLE_GRID, 0.0);
+	// delete button
+	Render_Texture(TITLE_DELETE_IMG, NULL, &TITLE_DELETE, 0.0);
 }
 
 void Display_RenderToolbox() {
@@ -440,6 +490,8 @@ void Display_RenderToolbox() {
 }
 
 void Display_RenderGrid() {
+	if (!GRID_FLAG) return;
+
 	int x,y;
 	SDL_Color GC = GRID_COLOR;
 

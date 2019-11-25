@@ -37,6 +37,18 @@ extern int CANVAS_COMPADD;
 
 extern int CANVAS_WIREHOVER;
 
+#define TITLE_DELETE_IMG  "img/ICON_DELETE.png"
+#define TITLE_GRIDON_IMG  "img/ICON_GRID.png"
+#define TITLE_GRIDOFF_IMG "img/ICON_GRIDOFF.png"
+#define TITLE_PAUSE_IMG   "img/ICON_PAUSE.png"
+#define TITLE_PLAY_IMG    "img/ICON_PLAY.png"
+
+// button rectangles
+extern SDL_Rect TITLE_DELETE;
+extern SDL_Rect TITLE_GRID;
+extern SDL_Rect TITLE_PAUSE;
+
+extern int GRID_FLAG;
 
 int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh);
 int RectMouseCollision(int rx, int ry, int rw, int rh);
@@ -53,6 +65,7 @@ void Display_Update();
 void Display_DrawTextbox(const char * text, int x, int y);
 
 // returns 1 if input detected
+int Display_InputCheckTitleBar();
 int Display_InputCheckScrollButtons();
 int Display_InputCheckToolbar();
 int Display_InputCheckCanvas();

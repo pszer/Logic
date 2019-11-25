@@ -1,4 +1,6 @@
 #include "render.h"
+#include "logic.h"
+#include "display.h"
 
 SDL_Renderer * RENDER = NULL;
 TTF_Font * FONT = NULL;
@@ -122,21 +124,40 @@ void Render_Component(component* c) {
 void Render_Wire(wire* w) {
 	if (!w) return;
 
-	SDL_Color C = w->state ? ON_COLOR : OFF_COLOR;
+	SDL_Color C;
+	if (w-wires == CANVAS_WIREHOVER) {
+		C = (SDL_Color){0xff,0xff,0x00,0xff};
+	} else {
+		C = w->state ? ON_COLOR : OFF_COLOR;
+	}
 
-	if (w->parity) {
+	//
+	//  parity=0  |  parity=1 |  parity=2 |  parity=3
+	//            |           |           |
+	//      |--p2 |      p2   |       p2  |  -----p2
+	//      |     |  ____|    |       |   |  |
+	//      |     |  |        |       |   |  |
+	//  p1--|     |  p1       |  p1---|   |  p1
+	//
+	if (w->parity == 0) {
 		int xm = (w->x1 + w->x2 - 1)/2;
 
 		Render_Line(w->x1, w->y1, xm   , w->y1, &C); // --
 		Render_Line(xm   , w->y2, w->x2, w->y2, &C); // --
 
 		Render_Line(xm   , w->y1, xm   , w->y2, &C); // |
-	} else {
+	} else if (w->parity == 1) {
 		int ym = (w->y1 + w->y2 - 1)/2;
 
 		Render_Line(w->x1, w->y1, w->x1, ym   , &C); // |
 		Render_Line(w->x2, ym   , w->x2, w->y2, &C); // |
 
 		Render_Line(w->x1, ym   , w->x2, ym   , &C); // --
+	} else if (w->parity == 2) {
+		Render_Line(w->x1, w->y1, w->x2, w->y1, &C); // --
+		Render_Line(w->x2, w->y1, w->x2, w->y2, &C); // |
+	} else  {
+		Render_Line(w->x1, w->y1, w->x1, w->y2, &C); // |
+		Render_Line(w->x1, w->y2, w->x2, w->y2, &C); // --
 	}
 }

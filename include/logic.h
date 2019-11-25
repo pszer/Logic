@@ -21,6 +21,8 @@ extern int COMP_DEF_COUNT;
 extern component * COMP_DEFS[MAX_COMP_DEFS];
 extern void      * COMP_HANDLES[MAX_COMP_DEFS];
 
+extern int LOGIC_PAUSE;
+
 // compiles and loads all components on comp
 // (calls DefineCompFile for all files in a folder)
 void Logic_DefineComps();
@@ -54,6 +56,8 @@ void Logic_AddWire(component* a, component* b, int n1, int n2, int parity);
 
 void Logic_DeleteComponent(int index);
 void Logic_DeleteWire(int index);
+
+void Logic_DeleteAll();
 
 void Logic_Update();
 void Logic_NullInputNodes();
