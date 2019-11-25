@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdio.h>
 
 #include <SDL2/SDL.h>
 #include "tex.h"
@@ -39,6 +40,7 @@ void render(component* c, SDL_Renderer * R, texture* texs, int tc) {
 }
 
 //void click (component*, int state, int ms);
+//void destroy(component * c);
 
 void update(component* c) {
 	/*c->var = c->in[0].state*0x08 +
@@ -91,8 +93,9 @@ component c_TALLY = {
 	0, //int var;
 
 	update,       //void (*update)(component*);
-	render,         //void (*render)(component*);
-	NULL          //void (*click) (component*, int, int);
+	render,       //void (*render)(component*);
+	NULL,         //void (*click) (component*, int, int);
+	destroy       //void (*destroy)(component*);
 };
 
 component* __load__() {

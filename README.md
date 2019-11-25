@@ -53,6 +53,7 @@ Example File (AND.c)
 
 //void render(component*, SDL_Renderer* R, texture* texs, int tex_count);
 //void click (component*, int state, int ms);
+//void destroy(component*);
 
 void update(component* c) {
 	c->out[0].state = c->in[0].state && c->in[1].state;
@@ -74,11 +75,12 @@ component c_AND = {
 	{{0, 24, 12}}, //nodes out
 
 	0, //int rotation;
-	0, //int var;
+	0, //long long var;
 
 	update,       //void (*update)(component*);
 	NULL,         //void (*render)(component*, SDL_Renderer*, texture*, int);
-	NULL          //void (*click) (component*, int, int);
+	NULL,         //void (*click) (component*, int, int);
+	NULL,         //void (*destroy)(component*);
 };
 
 component* __load__() {
@@ -101,17 +103,23 @@ The offset is the offset from the parent components position.
 
 'var' is an integer variable that can be used for computation in your components operation (e.g. its used to store the number in the counter).
 
-The three last entries are function pointers, they are all optional, but you will want an
+The four last entries are function pointers, they are all *optional*, but you will want an
 update function 99.9% guaranteed.
+
 The update function is called every frame.
+
 The render function is called when the component is being rendered, allowing for custom rendering
 (if a render function is set, the components image will NOT be drawn, only its nodes). The arguments given
 are the rendering context, an array to the current loaded textures and how many textures are loaded.
+
 The click function is called when a component is left clicked, the second argument is the STATE,
 -1 for inital left button click frame, 0 for when it's held and 1 for the button up frame. The
 last argument is how long the button has been held for.
 
-**These functions MUST be called 'update', 'render' and 'click' respectively otherwise they will
+The destroy function is called when the component is deleted in any way. For example, if you use var
+as a pointer to some allocated memory, you can use destroy to free the memory.
+
+**These functions MUST be called 'update', 'render', 'click' and 'destroy' respectively otherwise they will
 not work.**
 
 **\_\_load\_\_() MUST return a pointer to the components struct specification you just made**

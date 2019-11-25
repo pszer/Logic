@@ -71,8 +71,9 @@ component c_COUNTER = {
 	0, //int var;
 
 	update,       //void (*update)(component*);
-	render,         //void (*render)(component*);
-	NULL          //void (*click) (component*, int, int);
+	render,       //void (*render)(component*);
+	NULL,         //void (*click) (component*, int, int);
+	NULL          //void (*destroy)(component*);
 };
 
 component* __load__() {

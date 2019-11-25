@@ -44,13 +44,15 @@ struct component {
 
 	// optional variable used in component
 	// operation (e.g. on/off flag for a switch)
-	int var;
+	// (e.g. pointer allocated outside of component)
+	long long var;
 
 	/* optional functions */
 	void (*update)(component*);
 	void (*render)(component*, SDL_Renderer*, texture*, int);
 	//                        button ms
 	void (*click) (component*, int, int);
+	void (*destroy)(component*); // called when destroyed
 };
 
 node* Component_GetNode(component* c, int n);

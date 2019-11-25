@@ -107,6 +107,7 @@ int Logic_DefineCompFile(const char * fname) {
 	__LOAD(update);
 	__LOAD(render);
 	__LOAD(click);
+	__LOAD(destroy);
 
 	++COMP_DEF_COUNT;
 
@@ -152,7 +153,12 @@ void Logic_FreeDefines() {
 }
 
 void Logic_FreeComponents() {
-	if (comps) free(comps);
+	if (comps) {
+		int i;
+		for (i = comp_count-1; i >= 0; --i)
+			Logic_DeleteComponent(i);
+		free(comps);
+	}
 	comp_count = 0;
 	comps = NULL;
 }
@@ -179,6 +185,10 @@ void Logic_AddComponent(const component* comp_type, int x, int y, char rotation)
 void Logic_DeleteComponent(int index) {
 	if (index<0 || index>=comp_count) return;
 	component * c = comps + index;
+
+	if (c->destroy) {
+		c->destroy(c);
+	}
 
 	// first, delete all wires
 	// connected to the component

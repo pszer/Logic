@@ -33,7 +33,8 @@ component c_SWITCH = {
 
 	update, //void (*update)(component*);
 	NULL,            //void (*render)(component*);
-	click   //void (*click) (component*, int, int);
+	click,   //void (*click) (component*, int, int);
+	NULL          //void (*destroy)(component*);
 };
 
 component* __load__() {

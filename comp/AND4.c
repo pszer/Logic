@@ -31,7 +31,8 @@ component c_AND4 = {
 
 	update,       //void (*update)(component*);
 	NULL,         //void (*render)(component*);
-	NULL          //void (*click) (component*, int, int);
+	NULL,         //void (*click) (component*, int, int);
+	NULL          //void (*destroy)(component*);
 };
 
 component* __load__() {

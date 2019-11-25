@@ -4,6 +4,7 @@
 
 //void render(component*);
 //void click (component*, int state, int ms);
+//void destroy(component * c);
 
 void update(component* c) {
 	c->out[0].state = c->in[0].state && c->in[1].state;
@@ -29,7 +30,8 @@ component c_AND = {
 
 	update,       //void (*update)(component*);
 	NULL,         //void (*render)(component*);
-	NULL          //void (*click) (component*, int, int);
+	NULL,         //void (*click) (component*, int, int);
+	NULL          //void (*destroy)(component*);
 };
 
 component* __load__() {
