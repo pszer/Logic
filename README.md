@@ -1,6 +1,8 @@
 # Logic
 Logic circuit simulator
 
+![Screenshot](logic.png)
+
 # Controls
 Click and drag components on the toolbar onto the canvas.
 Click and drag on component nodes to create wires.
