@@ -6,7 +6,7 @@
 //void click (component*, int state, int ms);
 
 void update(component* c) {
-	c->out[0].state = c->in[0].state && c->in[1].state;
+	c->out[0].state = !(c->in[0].state && c->in[1].state);
 	c->state = c->out[0].state;
 }
 

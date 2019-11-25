@@ -2,4 +2,5 @@
 *
 !1bitadder.save
 !2bitadder.save
+!nand.save
 !.gitignore
