@@ -226,6 +226,7 @@ void Display_RightClick() {
 
 	if (CANVAS_WIREFLAG) {
 		CANVAS_WIREMAKE.parity = (CANVAS_WIREMAKE.parity+1)%4;
+		return;
 	}
 
 	if (CANVAS_WIREHOVER != -1) {
