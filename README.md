@@ -15,6 +15,17 @@ Right click while moving a component to rotate it.
 
 Some components can be clicked.
 
+Buttons in top-left corner can be clicked.
+In order, they are pause/play simulation, toggle grid, delete all components, load from file, save from file.
+
+# Saving and loading circuits
+
+Use the load and save button on the titlebar to load and save.
+
+All saves are written to the saves/ folder.
+
+File format is specified in the include/save.h header file.
+
 # Building
 
 To build simply use
