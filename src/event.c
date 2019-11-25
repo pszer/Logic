@@ -1,4 +1,5 @@
 #include "event.h"
+#include "display.h"
 
 SDL_Event EVENT;
 
@@ -8,6 +9,8 @@ char MOUSE1 = MOUSE_NULL, MOUSE2 = MOUSE_NULL;
 
 int M1S,M2S; // start tick for mouse button down
 int MOUSE1DUR=0, MOUSE2DUR=0;
+
+char BACKSPACE=0, ENTER=0;
 
 int WIN_W, WIN_H; // set at core init and win event
 
@@ -30,6 +33,9 @@ void Event_Update() {
 		if (MOUSE2 == MOUSE_DOWN)    MOUSE2 = MOUSE_HELD;
 		else if (MOUSE2 == MOUSE_UP) MOUSE2 = MOUSE_NULL;
 	}
+
+	if (BACKSPACE) BACKSPACE = 0;
+	if (ENTER) ENTER = 0;
 }
 
 // event update handlers
@@ -64,3 +70,17 @@ void Event_HandleButtonUp() {
 		MOUSE2 = MOUSE_UP;
 }
 
+void Event_HandleKeyDown() {
+	switch (EVENT.key.keysym.sym) {
+	case SDLK_BACKSPACE:
+		BACKSPACE = 1;
+		break;
+	case SDLK_RETURN:
+		ENTER = 1;
+		break;
+	}
+}
+
+void Event_HandleTextInput() {
+	Display_TypePopup(EVENT.text.text);
+}

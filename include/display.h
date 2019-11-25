@@ -3,6 +3,7 @@
 #include "logic.h"
 #include "event.h"
 #include "render.h"
+#include "save.h"
 
 #define TITLE_HEIGHT 12
 #define TITLE_FG     {0x00,0x00,0x00,0xff}
@@ -37,16 +38,34 @@ extern int CANVAS_COMPADD;
 
 extern int CANVAS_WIREHOVER;
 
+#define POPUP_SAVING_TEXT  "Save to where (in saves/)"
+#define POPUP_LOADING_TEXT "Load from where (in saves/)"
+#define POPUP_ENTER_TEXT   "[press ENTER] [click outside popup to cancel]"
+
+#define POPUP_BUFFER_SIZE 50
+extern char POPUP_BUFFER[POPUP_BUFFER_SIZE+1];
+extern int  POPUP_SAVING;
+extern int  POPUP_LOADING;
+extern SDL_Rect POPUP_RECT;
+
+#define NOTIF_TEXTBOX_SIZE 64
+extern char NOTIF_BUFFER[NOTIF_TEXTBOX_SIZE+1];
+extern int NOTIF_TEXTBOX;
+
 #define TITLE_DELETE_IMG  "img/ICON_DELETE.png"
 #define TITLE_GRIDON_IMG  "img/ICON_GRID.png"
 #define TITLE_GRIDOFF_IMG "img/ICON_GRIDOFF.png"
 #define TITLE_PAUSE_IMG   "img/ICON_PAUSE.png"
 #define TITLE_PLAY_IMG    "img/ICON_PLAY.png"
+#define TITLE_SAVE_IMG    "img/ICON_SAVE.png"
+#define TITLE_LOAD_IMG    "img/ICON_LOAD.png"
 
 // button rectangles
 extern SDL_Rect TITLE_DELETE;
 extern SDL_Rect TITLE_GRID;
 extern SDL_Rect TITLE_PAUSE;
+extern SDL_Rect TITLE_SAVE;
+extern SDL_Rect TITLE_LOAD;
 
 extern int GRID_FLAG;
 
@@ -60,6 +79,9 @@ void Display_RenderTitle();
 void Display_RenderToolbox();
 void Display_RenderGrid();
 
+void Display_RenderSavePopup();
+void Display_RenderLoadPopup();
+
 void Display_Update();
 
 void Display_DrawTextbox(const char * text, int x, int y);
@@ -71,6 +93,11 @@ int Display_InputCheckToolbar();
 int Display_InputCheckCanvas();
 
 void Display_RightClick();
+
+void Display_BackspacePopup();
+void Display_TypePopup(char * text);
+void Display_QuitPopup();
+void Display_EnterPopup();
 
 int  __Display_InputCheckNode(component* c);
 void __Display_FinishWireMake();

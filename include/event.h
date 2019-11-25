@@ -10,6 +10,8 @@ extern int MOUSEX, MOUSEY, MOUSEDX, MOUSEDY; // mouse xy pos and change
 enum { MOUSE_NULL , MOUSE_DOWN , MOUSE_HELD , MOUSE_UP };
 extern char MOUSE1, MOUSE2;
 
+extern char BACKSPACE, ENTER;
+
 // if mouse button is held, these are how long
 // it has been held (in milliseconds)
 extern int MOUSE1DUR, MOUSE2DUR;
@@ -26,3 +28,5 @@ void Event_HandleWindow();
 void Event_HandleMouse();
 void Event_HandleButtonDown();
 void Event_HandleButtonUp();
+void Event_HandleKeyDown();
+void Event_HandleTextInput();

@@ -10,7 +10,7 @@
 
 #define DEF_ON_COLOR { 0x8e,0xe8,0x0c,0xff }
 
-#define DEF_FONT "alphbeta.ttf" 
+#define DEF_FONT "homespun.ttf" 
 
 extern SDL_Renderer * RENDER;
 extern TTF_Font * FONT;

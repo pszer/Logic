@@ -57,7 +57,7 @@ void Render_Text(const char* text, int x, int y, int align, SDL_Color* c) {
 	SDL_Color W = {0xff,0xff,0xff,0xff};
 	if (!c) c = &W;
 
-	SDL_Surface* s = TTF_RenderUTF8_Blended(FONT, text, *c);
+	SDL_Surface* s = TTF_RenderUTF8_Solid(FONT, text, *c);
 	SDL_Texture* t = SDL_CreateTextureFromSurface(RENDER, s);
 
 	int w,h;

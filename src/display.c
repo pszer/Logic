@@ -16,11 +16,23 @@ int CANVAS_COMPROT=0;
 
 int CANVAS_WIREHOVER = -1;
 
+SDL_Rect TITLE_SAVE   = { 59,0,12,12 };
+SDL_Rect TITLE_LOAD   = { 46,0,12,12 };
 SDL_Rect TITLE_DELETE = { 26,0,12,12 };
 SDL_Rect TITLE_GRID   = { 13,0,12,12 };
 SDL_Rect TITLE_PAUSE  = { 0, 0,12,12 };
 
 int GRID_FLAG = 1;
+
+char POPUP_BUFFER[POPUP_BUFFER_SIZE+1] = "";
+int  POPUP_SAVING  = 0;
+int  POPUP_LOADING = 0;
+
+SDL_Rect POPUP_RECT = {0,0,400,100};
+SDL_Rect TYPING_RECT = {20,42,360,16};
+
+char NOTIF_BUFFER[NOTIF_TEXTBOX_SIZE+1] = "";
+int NOTIF_TEXTBOX = 0;
  
 int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh) {
 	int a,b;
@@ -125,6 +137,15 @@ void Display_Render() {
 		Display_DrawTextbox(COMP_DEFS[TOOLBAR_COMPHOVER]->name,
 		  MOUSEX, MOUSEY);
 	}
+
+	if (POPUP_SAVING)
+		Display_RenderSavePopup();
+	if (POPUP_LOADING)
+		Display_RenderLoadPopup();
+
+	if (NOTIF_TEXTBOX) {
+		Display_DrawTextbox(NOTIF_BUFFER, MOUSEX, MOUSEY);
+	}
 }
 
 void Display_Update() {
@@ -133,6 +154,24 @@ void Display_Update() {
 	TOOLBAR_COMPHOVER=-1;
 
 	CANVAS_WIREHOVER=-1;
+
+	if (NOTIF_TEXTBOX) --NOTIF_TEXTBOX;
+
+	if (POPUP_SAVING || POPUP_LOADING) {
+		if (!RectMouseCollision(POPUP_RECT.x, POPUP_RECT.y,
+		       POPUP_RECT.w, POPUP_RECT.h) && MOUSE1==MOUSE_DOWN)
+		{
+			Display_QuitPopup();
+			return;
+		}
+
+		if (BACKSPACE)
+			Display_BackspacePopup();
+		if (ENTER)
+			Display_EnterPopup();
+
+		return;
+	}
 
 	Display_InputCheckCanvas();
 	Display_InputCheckScrollButtons();
@@ -216,6 +255,14 @@ int Display_InputCheckTitleBar() {
 		GRID_FLAG = !GRID_FLAG;
 	} else if (RectMouseCollision( UNRECT(TITLE_DELETE) )) {
 		Logic_DeleteAll();
+	} else if (RectMouseCollision( UNRECT(TITLE_SAVE ))) {
+		Display_QuitPopup();
+		POPUP_SAVING = 1;
+		SDL_StartTextInput();
+	} else if (RectMouseCollision( UNRECT(TITLE_LOAD ))) {
+		Display_QuitPopup();
+		POPUP_LOADING = 1;
+		SDL_StartTextInput();
 	}
 
 	#undef UNRECT
@@ -384,6 +431,48 @@ void __Display_FinishCompAdd() {
 	CANVAS_COMPADD = -1;
 }
 
+void Display_BackspacePopup() {
+	int len = strlen(POPUP_BUFFER);
+	if (len == 0) return;
+	POPUP_BUFFER[len-1] = '\0';
+}
+
+void Display_TypePopup(char * text) {
+	int i = strlen(POPUP_BUFFER);
+	char * c = text;
+
+	while (i < POPUP_BUFFER_SIZE) {
+		if (*c) POPUP_BUFFER[i] = *c;
+		else break;
+		++c;
+		++i;
+	}
+
+	POPUP_BUFFER[i] = '\0';
+}
+
+void Display_QuitPopup() {
+	POPUP_SAVING = 0;
+	POPUP_LOADING = 0;
+	strcpy(POPUP_BUFFER, "");
+	SDL_StopTextInput();
+}
+
+void Display_EnterPopup() {
+	// if string not empty
+	if (POPUP_BUFFER[0]) {
+		int result = 0;
+		if (POPUP_SAVING) result=Save_SaveFile(POPUP_BUFFER);
+		else if (POPUP_LOADING) result=Save_LoadFile(POPUP_BUFFER);
+
+		if (!result) {
+			NOTIF_TEXTBOX = 240;
+			strcpy(NOTIF_BUFFER, SAVE_ERROR);
+		}
+	}
+	Display_QuitPopup();
+}
+
 void Display_DrawTextbox(const char * text, int x, int y) {
 	int w,h;
 
@@ -392,9 +481,9 @@ void Display_DrawTextbox(const char * text, int x, int y) {
 	SDL_Color BG = {0x00,0x00,0x00,0xff};
 	SDL_Color FG = {0xff,0xff,0xff,0xff};
 
-	Render_Rect(x, y-h-1, w+3, h+2, &BG);
-	Render_Text(text, x+2, y-h, ALIGN_LEFT, &FG);
-	Render_RectLine(x, y-h-1, w+3, h+2, &FG);
+	Render_Rect(x, y-h-1, w+4, h+2, &BG);
+	Render_Text(text, x+3, y-h-1, ALIGN_LEFT, &FG);
+	Render_RectLine(x, y-h-1, w+4, h+2, &FG);
 }
 
 void Display_RenderTitle() {
@@ -406,9 +495,9 @@ void Display_RenderTitle() {
 	if (!LOGIC_PAUSE)
 		++count;
 
-	SDL_Rect VP = {40,0,WIN_W,TITLE_HEIGHT};
+	SDL_Rect VP = {80,0,WIN_W,TITLE_HEIGHT};
 	SDL_RenderSetViewport(RENDER, &VP);
-	Render_Text("Logic", (count) % (WIN_W+100)-50,0, ALIGN_LEFT, &FG);
+	Render_Text("Logic", (count) % (WIN_W+40)-40,-1, ALIGN_LEFT, &FG);
 	SDL_RenderSetViewport(RENDER, NULL);
 
 	// render buttons
@@ -420,6 +509,61 @@ void Display_RenderTitle() {
 		NULL, &TITLE_GRID, 0.0);
 	// delete button
 	Render_Texture(TITLE_DELETE_IMG, NULL, &TITLE_DELETE, 0.0);
+
+	// save button
+	Render_Texture(TITLE_SAVE_IMG, NULL, &TITLE_SAVE, 0.0);
+	// load button
+	Render_Texture(TITLE_LOAD_IMG, NULL, &TITLE_LOAD, 0.0);
+}
+
+void Display_RenderSavePopup() {
+	POPUP_RECT.x = WIN_W/2 - POPUP_RECT.w/2;
+	POPUP_RECT.y = WIN_H/2 - POPUP_RECT.h/2;
+
+	SDL_Color BG = {0xff,0xff,0xff,0xff},
+	          FG = {0x00,0x00,0x00,0xff};
+
+	Render_Rect(POPUP_RECT.x, POPUP_RECT.y, POPUP_RECT.w, POPUP_RECT.h, &BG);
+	Render_RectLine(POPUP_RECT.x, POPUP_RECT.y, POPUP_RECT.w, POPUP_RECT.h, &FG);
+	Render_RectLine(POPUP_RECT.x+1, POPUP_RECT.y+1, POPUP_RECT.w-2, POPUP_RECT.h-2, &FG);
+
+	SDL_Rect newtyper = TYPING_RECT;
+	newtyper.x += POPUP_RECT.x;
+	newtyper.y += POPUP_RECT.y;
+
+	Render_RectLine(newtyper.x, newtyper.y, newtyper.w, newtyper.h, &FG);
+	Render_RectLine(newtyper.x+1, newtyper.y+1, newtyper.w-2, newtyper.h-2, &FG);
+
+	Render_Text(POPUP_SAVING_TEXT, POPUP_RECT.x+POPUP_RECT.w/2, POPUP_RECT.y+25,
+	  ALIGN_MIDDLE, &FG);
+	Render_Text(POPUP_BUFFER, newtyper.x+4, newtyper.y+2, ALIGN_LEFT, &FG);
+	Render_Text(POPUP_ENTER_TEXT, POPUP_RECT.x+POPUP_RECT.w/2, POPUP_RECT.y+POPUP_RECT.h-25,
+	  ALIGN_MIDDLE, &FG);
+}
+
+void Display_RenderLoadPopup() {
+	POPUP_RECT.x = WIN_W/2 - POPUP_RECT.w/2;
+	POPUP_RECT.y = WIN_H/2 - POPUP_RECT.h/2;
+
+	SDL_Color BG = {0xff,0xff,0xff,0xff},
+	          FG = {0x00,0x00,0x00,0xff};
+
+	Render_Rect(POPUP_RECT.x, POPUP_RECT.y, POPUP_RECT.w, POPUP_RECT.h, &BG);
+	Render_RectLine(POPUP_RECT.x, POPUP_RECT.y, POPUP_RECT.w, POPUP_RECT.h, &FG);
+	Render_RectLine(POPUP_RECT.x+1, POPUP_RECT.y+1, POPUP_RECT.w-2, POPUP_RECT.h-2, &FG);
+
+	SDL_Rect newtyper = TYPING_RECT;
+	newtyper.x += POPUP_RECT.x;
+	newtyper.y += POPUP_RECT.y;
+
+	Render_RectLine(newtyper.x, newtyper.y, newtyper.w, newtyper.h, &FG);
+	Render_RectLine(newtyper.x+1, newtyper.y+1, newtyper.w-2, newtyper.h-2, &FG);
+
+	Render_Text(POPUP_LOADING_TEXT, POPUP_RECT.x+POPUP_RECT.w/2, POPUP_RECT.y+25,
+	  ALIGN_MIDDLE, &FG);
+	Render_Text(POPUP_BUFFER, newtyper.x+4, newtyper.y+2, ALIGN_LEFT, &FG);
+	Render_Text(POPUP_ENTER_TEXT, POPUP_RECT.x+POPUP_RECT.w/2, POPUP_RECT.y+POPUP_RECT.h-25,
+	  ALIGN_MIDDLE, &FG);
 }
 
 void Display_RenderToolbox() {

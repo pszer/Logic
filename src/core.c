@@ -148,6 +148,12 @@ void Core_HandleEvents() {
 		case SDL_MOUSEBUTTONUP:
 			Event_HandleButtonUp();
 			break;
+		case SDL_KEYDOWN:
+			Event_HandleKeyDown();
+			break;
+		case SDL_TEXTINPUT:
+			Event_HandleTextInput();
+			break;
 		}
 	}
 }

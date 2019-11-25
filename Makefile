@@ -7,10 +7,10 @@ SDIR=src
 
 LIBS=-lSDL2 -lSDL2_image -lSDL2_ttf -lm -ldl
 
-_DEPS = core.h event.h render.h comp.h tex.h logic.h display.h
+_DEPS = core.h event.h render.h comp.h tex.h logic.h display.h save.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
-_OBJ = main.o core.o event.o render.o comp.o tex.o logic.o display.o
+_OBJ = main.o core.o event.o render.o comp.o tex.o logic.o display.o save.o
 OBJ = $(patsubst %,$(ODIR)/%,$(_OBJ))
 
 OUTPUT = logic
