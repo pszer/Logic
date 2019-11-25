@@ -164,7 +164,7 @@ void Logic_FreeWires() {
 }
 
 void Logic_AddComponent(const component* comp_type, int x, int y, char rotation) {
-	if (comp_count == comp_size)
+	if (comp_count >= comp_size)
 		Logic_AllocateComponents(comp_size*2+1);
 
 	component * c = comps + comp_count;

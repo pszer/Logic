@@ -35,8 +35,8 @@ int Save_LoadFile(char * fname) {
 		goto err;
 	}
 
-	comps_temp = malloc(sizeof(component) * compc);
-	wires_temp = malloc(sizeof(wire) * wirec);
+	comps_temp = malloc(sizeof(component) * compc * 2);
+	wires_temp = malloc(sizeof(wire) * wirec * 2);
 
 	if (!comps_temp || !wires_temp) {
 		strcpy(SAVE_ERROR, "malloc error");
@@ -65,6 +65,9 @@ int Save_LoadFile(char * fname) {
 
 	comp_count = compc;
 	wire_count = wirec;
+
+	comp_size = compc*2;
+	wire_size = wirec*2;
 
 	Logic_UpdateAllWirePos();
 
