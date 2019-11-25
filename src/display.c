@@ -15,6 +15,8 @@ int CANVAS_COMPADD=-1;
 int CANVAS_COMPROT=0;
 
 int CANVAS_WIREHOVER = -1;
+int CANVAS_NODECOMPHOVER = -1;
+int CANVAS_NODEHOVER = -1;
 
 SDL_Rect TITLE_SAVE   = { 59,0,12,12 };
 SDL_Rect TITLE_LOAD   = { 46,0,12,12 };
@@ -154,6 +156,7 @@ void Display_Update() {
 	TOOLBAR_COMPHOVER=-1;
 
 	CANVAS_WIREHOVER=-1;
+	CANVAS_NODECOMPHOVER = -1;
 
 	if (NOTIF_TEXTBOX) --NOTIF_TEXTBOX;
 
@@ -177,6 +180,12 @@ void Display_Update() {
 	Display_InputCheckScrollButtons();
 	Display_InputCheckToolbar();
 	Display_InputCheckTitleBar();
+
+	if (CANVAS_NODECOMPHOVER != -1 || CANVAS_WIREFLAG ||
+	    CANVAS_COMPMOVE!=-1 || CANVAS_COMPADD!=-1)
+	{
+		CANVAS_WIREHOVER = -1;
+	}
 
 	if (MOUSE1 == MOUSE_UP) {
 		CANVAS_COMPMOVE = -1;
@@ -353,21 +362,24 @@ int Display_InputCheckCanvas() {
 }
 
 int __Display_InputCheckNode(component* c) {
-	if (MOUSE1 != MOUSE_DOWN) return 0;
-
 	int i;
 	for (i = 0; i < c->in_count; ++i) {
 		int x,y,w,h;
 		Component_GetNodeRect(c, c->in+i, &x,&y,&w,&h);
 		if (RectMouseCollision(x,y,w,h)) {
-			CANVAS_WIREFLAG = 1;
-			CANVAS_WIREMAKE.c1 = c;
-			CANVAS_WIREMAKE.n1 = -i-1;
-			Component_GetNodePos(c, c->in+i,
-			  &CANVAS_WIREMAKE.x1, &CANVAS_WIREMAKE.y1);
-			CANVAS_WIREMAKE.x2 = CANVAS_WIREMAKE.x1;
-			CANVAS_WIREMAKE.y2 = CANVAS_WIREMAKE.y1;
-			return 1;
+			CANVAS_NODECOMPHOVER = c-comps;
+			CANVAS_NODEHOVER = -i-1;
+
+			if (MOUSE1 == MOUSE_DOWN) {
+				CANVAS_WIREFLAG = 1;
+				CANVAS_WIREMAKE.c1 = c;
+				CANVAS_WIREMAKE.n1 = -i-1;
+				Component_GetNodePos(c, c->in+i,
+				  &CANVAS_WIREMAKE.x1, &CANVAS_WIREMAKE.y1);
+				CANVAS_WIREMAKE.x2 = CANVAS_WIREMAKE.x1;
+				CANVAS_WIREMAKE.y2 = CANVAS_WIREMAKE.y1;
+				return 1;
+			}
 		}
 	}
 
@@ -375,14 +387,19 @@ int __Display_InputCheckNode(component* c) {
 		int x,y,w,h;
 		Component_GetNodeRect(c, c->out+i, &x,&y,&w,&h);
 		if (RectMouseCollision(x,y,w,h)) {
-			CANVAS_WIREFLAG = 1;
-			CANVAS_WIREMAKE.c1 = c;
-			CANVAS_WIREMAKE.n1 = i;
-			Component_GetNodePos(c, c->out+i,
-			  &CANVAS_WIREMAKE.x1, &CANVAS_WIREMAKE.y1);
-			CANVAS_WIREMAKE.x2 = CANVAS_WIREMAKE.x1;
-			CANVAS_WIREMAKE.y2 = CANVAS_WIREMAKE.y1;
-			return 1;
+			CANVAS_NODECOMPHOVER = c-comps;
+			CANVAS_NODEHOVER = i;
+
+			if (MOUSE1 == MOUSE_DOWN) {
+				CANVAS_WIREFLAG = 1;
+				CANVAS_WIREMAKE.c1 = c;
+				CANVAS_WIREMAKE.n1 = i;
+				Component_GetNodePos(c, c->out+i,
+				  &CANVAS_WIREMAKE.x1, &CANVAS_WIREMAKE.y1);
+				CANVAS_WIREMAKE.x2 = CANVAS_WIREMAKE.x1;
+				CANVAS_WIREMAKE.y2 = CANVAS_WIREMAKE.y1;
+				return 1;
+			}
 		}
 	}
 

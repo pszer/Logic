@@ -18,7 +18,7 @@
 #define TOOLBAR_SCROLL_W 10
 
 #define GRID_COLOR {0x25,0x25,0x25,0xff}
-#define GRID_SIZE 16
+#define GRID_SIZE 60
 
 extern int TOOLBAR_SCROLL;
 extern int TOOLBAR_LHOVER, TOOLBAR_RHOVER;
@@ -36,7 +36,10 @@ extern wire CANVAS_WIREMAKE;
 // otherwise its the component type index
 extern int CANVAS_COMPADD;
 
+// indexes for hovered over objects
 extern int CANVAS_WIREHOVER;
+extern int CANVAS_NODECOMPHOVER;
+extern int CANVAS_NODEHOVER;
 
 #define POPUP_SAVING_TEXT  "Save to where (in saves/)"
 #define POPUP_LOADING_TEXT "Load from where (in saves/)"

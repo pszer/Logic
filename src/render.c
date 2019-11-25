@@ -90,20 +90,36 @@ void Render_Texture(char * tname,
 void Render_Component(component* c) {
 	if (!c) return;
 
+	int hovered = (c-comps) == CANVAS_NODECOMPHOVER;
+
 	// render nodes
 	SDL_Color color    = {0xff,0xff,0xff,0xff},
 	          on_color = DEF_ON_COLOR;
+	SDL_Color hover    = {0xff,0xff,0x00,0xff};
 
 	int x,y,w,h;
 	int i;
 	for (i = 0; i < c->in_count; ++i) {
 		Component_GetNodeRect(c, c->in+i, &x,&y,&w,&h);
-		Render_Rect(x,y,w,h, c->in[i].state ? &on_color : &color);
+		if (hovered && -i-1 == CANVAS_NODEHOVER) {
+			SDL_Rect hover_rect = {x+w/2-8,y+h/2-8,16,16};
+			Render_Rect(x,y,w,h, &hover);
+			Render_Texture("img/hover.png", NULL, &hover_rect, 0.0);
+		} else {
+			Render_Rect(x,y,w,h, c->in[i].state ? &on_color : &color);
+		}
 	}
 
 	for (i = 0; i < c->out_count; ++i) {
 		Component_GetNodeRect(c, c->out+i, &x,&y,&w,&h);
-		Render_Rect(x,y,w,h, c->out[i].state ? &on_color : &color);
+
+		if (hovered && i == CANVAS_NODEHOVER) {
+			SDL_Rect hover_rect = {x+w/2-8,y+h/2-8,16,16};
+			Render_Rect(x,y,w,h, &hover);
+			Render_Texture("img/hover.png", NULL, &hover_rect, 0.0);
+		} else {
+			Render_Rect(x,y,w,h, c->out[i].state ? &on_color : &color);
+		}
 	}
 
 	// render component
