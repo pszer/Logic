@@ -62,6 +62,7 @@ void Logic_DeleteAll();
 
 void Logic_Update();
 void Logic_NullInputNodes();
+void Logic_UpdateWires();
 void Logic_UpdateComponents();
 
 void Logic_UpdateAllWirePos();

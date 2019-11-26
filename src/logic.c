@@ -273,10 +273,17 @@ void Logic_DeleteAll() {
 }
 
 void Logic_Update() {
+	Logic_NullInputNodes();
+	Logic_UpdateWires();
+
 	if (LOGIC_PAUSE) return;
 
-	Logic_NullInputNodes();
+	Logic_UpdateComponents();
 
+	++LOGIC_FRAME;
+}
+
+void Logic_UpdateWires() {
 	for (int i = 0; i < wire_count; ++i) {
 		wire * w = wires + i;
 
@@ -290,10 +297,6 @@ void Logic_Update() {
 		N1->state = w->state;
 		N2->state = w->state;
 	}
-
-	Logic_UpdateComponents();
-
-	++LOGIC_FRAME;
 }
 
 void Logic_NullInputNodes() {
