@@ -80,34 +80,35 @@ int RectMouseCollision(int rx, int ry, int rw, int rh);
 int WirePointCollision(int x, int y, wire * w);
 int WireMouseCollision(wire * w);
 
-void Display_Render();
-void Display_RenderTitle();
-void Display_RenderToolbox();
-void Display_RenderGrid();
+void Display_Render(void);
+void Display_RenderTitle(void);
+void Display_RenderToolbox(void);
+void Display_RenderGrid(void);
 
-void Display_RenderSavePopup();
-void Display_RenderLoadPopup();
+void Display_RenderSavePopup(void);
+void Display_RenderLoadPopup(void);
 
-void Display_Update();
-
-void Display_DrawTextbox(const char * text, int x, int y);
+void Display_Update(void);
+void Display_NullFlags(void);
 
 // returns 1 if input detected
-int Display_InputCheckTitleBar();
-int Display_InputCheckScrollButtons();
-int Display_InputCheckToolbar();
-int Display_InputCheckCanvas();
+int Display_InputCheckTitleBar(void);
+int Display_InputCheckScrollButtons(void);
+int Display_InputCheckToolbar(void);
+int Display_InputCheckCanvas(void);
 
-void Display_RightClick();
+void Display_LeftClick(void);
+void Display_RightClick(void);
 
-void Display_BackspacePopup();
+void Display_PopupUpdate(void);
+void Display_BackspacePopup(void);
 void Display_TypePopup(char * text);
-void Display_QuitPopup();
-void Display_EnterPopup();
+void Display_QuitPopup(void);
+void Display_EnterPopup(void);
 
 void Display_TransformCamera(int x, int y);
-void Display_ResetCamera();
+void Display_ResetCamera(void);
 
 int  __Display_InputCheckNode(component* c);
-void __Display_FinishWireMake();
-void __Display_FinishCompAdd();
+void __Display_FinishWireMake(void);
+void __Display_FinishCompAdd(void);

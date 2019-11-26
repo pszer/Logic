@@ -42,6 +42,9 @@ enum {ALIGN_LEFT, ALIGN_MIDDLE, ALIGN_RIGHT};
 /* render text */
 void Render_Text(const char* text, int x, int y, int align, SDL_Color* c);
 
+/* renders textbox */
+void Render_DrawTextbox(const char * text, int x, int y);
+
 /* renders texture by texture name */
 void Render_Texture(char * tname,
 	SDL_Rect* src, SDL_Rect* dest, double rotation);

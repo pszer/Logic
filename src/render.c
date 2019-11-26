@@ -14,21 +14,21 @@ void Render_SetColor(SDL_Color* C) {
 }
 
 /* clears screen to BG */
-void Render_Clear() {
+void Render_Clear(void) {
 	Render_SetColor(&BG);
 	SDL_RenderClear(RENDER);
 }
 
 /* updates frame */
-void Render_Update() {
+void Render_Update(void) {
 	SDL_RenderPresent(RENDER);
 }
 
 /* loads and frees default font */
-void Render_LoadFont() {
+void Render_LoadFont(void) {
 	FONT = TTF_OpenFont(DEF_FONT, 12);
 }
-void Render_FreeFont() {
+void Render_FreeFont(void) {
 	if (FONT) TTF_CloseFont(FONT);
 }
 
@@ -83,6 +83,26 @@ void Render_Texture(char * tname,
 
 	SDL_RenderCopyEx(RENDER, t->img,
 	  src, dest, rotation, NULL, SDL_FLIP_NONE);
+}
+
+void Render_DrawTextbox(const char * text, int x, int y) {
+	int w,h;
+
+	TTF_SizeText(FONT, text, &w, &h);
+
+	// if textbox would go off top edge of window
+	if (y-h-2 < 0)
+		y = h+2;
+	// if textbox would go off right edge of window
+	if (x+w+4 > WIN_W)
+		x = WIN_W-w-4;
+
+	SDL_Color BG = {0x00,0x00,0x00,0xff};
+	SDL_Color FG = {0xff,0xff,0xff,0xff};
+
+	Render_Rect(x, y-h-1, w+4, h+2, &BG);
+	Render_Text(text, x+3, y-h-1, ALIGN_LEFT, &FG);
+	Render_RectLine(x, y-h-1, w+4, h+2, &FG);
 }
 
 void Render_Component(component* c) {

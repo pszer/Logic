@@ -27,21 +27,21 @@ int Core_Init(int argc, char ** argv);
 /* Core_Quit
  * quits sdl and frees memory
  */
-void Core_Quit();
+void Core_Quit(void);
 
 /* Core_Main
  * main loop
  * loops until QUIT_FLAG is set
  */
-void Core_Main();
+void Core_Main(void);
 
 /* Core_Render
  * render graphics call
  */
-void Core_Render();
+void Core_Render(void);
 
 /* Core_HandleEvents
  * polls all events in the queue
  * calls handle functions defined in event.h
  */
-void Core_HandleEvents();
+void Core_HandleEvents(void);

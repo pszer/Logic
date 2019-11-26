@@ -105,7 +105,7 @@ int WireMouseCollision(wire * w) {
 	return WirePointCollision(MOUSEX, MOUSEY, w);
 }
 
-void Display_Render() {
+void Display_Render(void) {
 	Display_RenderToolbox();
 	Display_RenderTitle();
 
@@ -139,7 +139,7 @@ void Display_Render() {
 	}
 
 	if (TOOLBAR_COMPHOVER != -1) {
-		Display_DrawTextbox(COMP_DEFS[TOOLBAR_COMPHOVER]->name,
+		Render_DrawTextbox(COMP_DEFS[TOOLBAR_COMPHOVER]->name,
 		  MOUSEX, MOUSEY);
 	}
 
@@ -149,33 +149,17 @@ void Display_Render() {
 		Display_RenderLoadPopup();
 
 	if (NOTIF_TEXTBOX) {
-		Display_DrawTextbox(NOTIF_BUFFER, MOUSEX, MOUSEY);
+		Render_DrawTextbox(NOTIF_BUFFER, MOUSEX, MOUSEY);
 	}
 }
 
-void Display_Update() {
-	TOOLBAR_LHOVER=0;
-	TOOLBAR_RHOVER=0;
-	TOOLBAR_COMPHOVER=-1;
-
-	CANVAS_WIREHOVER=-1;
-	CANVAS_NODECOMPHOVER = -1;
+void Display_Update(void) {
+	Display_NullFlags();
 
 	if (NOTIF_TEXTBOX) --NOTIF_TEXTBOX;
 
 	if (POPUP_SAVING || POPUP_LOADING) {
-		if (!RectMouseCollision(POPUP_RECT.x, POPUP_RECT.y,
-		       POPUP_RECT.w, POPUP_RECT.h) && MOUSE1==MOUSE_DOWN)
-		{
-			Display_QuitPopup();
-			return;
-		}
-
-		if (BACKSPACE)
-			Display_BackspacePopup();
-		if (ENTER)
-			Display_EnterPopup();
-
+		Display_PopupUpdate();
 		return;
 	}
 
@@ -222,7 +206,16 @@ void Display_Update() {
 	}
 }
 
-void Display_RightClick() {
+void Display_NullFlags(void) {
+	TOOLBAR_LHOVER=0;
+	TOOLBAR_RHOVER=0;
+	TOOLBAR_COMPHOVER=-1;
+
+	CANVAS_WIREHOVER=-1;
+	CANVAS_NODECOMPHOVER = -1;
+}
+
+void Display_RightClick(void) {
 	if (CANVAS_COMPADD != -1) {
 		CANVAS_COMPROT++;
 		CANVAS_COMPROT %= 4;
@@ -256,7 +249,7 @@ void Display_RightClick() {
 	}
 }
 
-int Display_InputCheckTitleBar() {
+int Display_InputCheckTitleBar(void) {
 	if (MOUSEY > TITLE_HEIGHT) return 0;
 	if (MOUSE1 != MOUSE_DOWN) return 0;
 
@@ -285,7 +278,7 @@ int Display_InputCheckTitleBar() {
 	return 1;
 }
 
-int Display_InputCheckScrollButtons() {
+int Display_InputCheckScrollButtons(void) {
 	if (RectMouseCollision(0,TITLE_HEIGHT,TOOLBAR_SCROLL_W,TOOLBAR_HEIGHT)) {
 		TOOLBAR_LHOVER=1;
 
@@ -309,7 +302,7 @@ int Display_InputCheckScrollButtons() {
 	return 1;
 }
 
-int Display_InputCheckToolbar() {
+int Display_InputCheckToolbar(void) {
 	if (MOUSEY < TITLE_HEIGHT || MOUSEY > TITLE_HEIGHT + TOOLBAR_HEIGHT)
 		return 0;
 
@@ -331,7 +324,7 @@ int Display_InputCheckToolbar() {
 	return 1;
 }
 
-int Display_InputCheckCanvas() {
+int Display_InputCheckCanvas(void) {
 	if (MOUSEY < TITLE_HEIGHT + TOOLBAR_HEIGHT) return 0;
 
 	int i;
@@ -363,6 +356,7 @@ int Display_InputCheckCanvas() {
 		}
 	}
 
+	// drag view across screen
 	if (CANVAS_COMPADD==-1 && CANVAS_COMPMOVE==-1 &&
 	    !CANVAS_WIREFLAG && MOUSE1==MOUSE_HELD)
 	{
@@ -382,6 +376,7 @@ int __Display_InputCheckNode(component* c) {
 			CANVAS_NODEHOVER = -i-1;
 
 			if (MOUSE1 == MOUSE_DOWN) {
+				// start creating wire
 				CANVAS_WIREFLAG = 1;
 				CANVAS_WIREMAKE.c1 = c;
 				CANVAS_WIREMAKE.n1 = -i-1;
@@ -426,7 +421,7 @@ void __Display_AddWire(component* c, int n) {
 	              CANVAS_WIREMAKE.parity);
 }
 
-void __Display_FinishWireMake() {
+void __Display_FinishWireMake(void) {
 	CANVAS_WIREFLAG = 0;
 	for (component* c = comps; c != comps+comp_count; ++c) {
 		int i;
@@ -451,7 +446,7 @@ void __Display_FinishWireMake() {
 }
 
 
-void __Display_FinishCompAdd() {
+void __Display_FinishCompAdd(void) {
 	if (MOUSEY > TITLE_HEIGHT + TOOLBAR_HEIGHT) {
 		component * c = COMP_DEFS[CANVAS_COMPADD];
 		Logic_AddComponent(c, MOUSEX-c->w/2, MOUSEY-c->h/2, CANVAS_COMPROT);
@@ -460,7 +455,20 @@ void __Display_FinishCompAdd() {
 	CANVAS_COMPADD = -1;
 }
 
-void Display_BackspacePopup() {
+void Display_PopupUpdate(void) {
+	if (!RectMouseCollision(POPUP_RECT.x, POPUP_RECT.y,
+	       POPUP_RECT.w, POPUP_RECT.h) && MOUSE1==MOUSE_DOWN)
+	{
+		Display_QuitPopup();
+	}
+
+	if (BACKSPACE)
+		Display_BackspacePopup();
+	if (ENTER)
+		Display_EnterPopup();
+}
+
+void Display_BackspacePopup(void) {
 	int len = strlen(POPUP_BUFFER);
 	if (len == 0) return;
 	POPUP_BUFFER[len-1] = '\0';
@@ -480,14 +488,14 @@ void Display_TypePopup(char * text) {
 	POPUP_BUFFER[i] = '\0';
 }
 
-void Display_QuitPopup() {
+void Display_QuitPopup(void) {
 	POPUP_SAVING = 0;
 	POPUP_LOADING = 0;
 	strcpy(POPUP_BUFFER, "");
 	SDL_StopTextInput();
 }
 
-void Display_EnterPopup() {
+void Display_EnterPopup(void) {
 	// if string not empty
 	if (POPUP_BUFFER[0]) {
 		int result = 0;
@@ -503,20 +511,7 @@ void Display_EnterPopup() {
 	Display_QuitPopup();
 }
 
-void Display_DrawTextbox(const char * text, int x, int y) {
-	int w,h;
-
-	TTF_SizeText(FONT, text, &w, &h);
-
-	SDL_Color BG = {0x00,0x00,0x00,0xff};
-	SDL_Color FG = {0xff,0xff,0xff,0xff};
-
-	Render_Rect(x, y-h-1, w+4, h+2, &BG);
-	Render_Text(text, x+3, y-h-1, ALIGN_LEFT, &FG);
-	Render_RectLine(x, y-h-1, w+4, h+2, &FG);
-}
-
-void Display_RenderTitle() {
+void Display_RenderTitle(void) {
 	SDL_Color BG = TITLE_BG;
 	SDL_Color FG = TITLE_FG;
 	Render_Rect(0, 0, WIN_W, TITLE_HEIGHT, &BG);
@@ -548,7 +543,7 @@ void Display_RenderTitle() {
 	Render_Texture(TITLE_LOAD_IMG, NULL, &TITLE_LOAD, 0.0);
 }
 
-void Display_RenderSavePopup() {
+void Display_RenderSavePopup(void) {
 	POPUP_RECT.x = WIN_W/2 - POPUP_RECT.w/2;
 	POPUP_RECT.y = WIN_H/2 - POPUP_RECT.h/2;
 
@@ -573,7 +568,7 @@ void Display_RenderSavePopup() {
 	  ALIGN_MIDDLE, &FG);
 }
 
-void Display_RenderLoadPopup() {
+void Display_RenderLoadPopup(void) {
 	POPUP_RECT.x = WIN_W/2 - POPUP_RECT.w/2;
 	POPUP_RECT.y = WIN_H/2 - POPUP_RECT.h/2;
 
@@ -598,7 +593,7 @@ void Display_RenderLoadPopup() {
 	  ALIGN_MIDDLE, &FG);
 }
 
-void Display_RenderToolbox() {
+void Display_RenderToolbox(void) {
 	SDL_Color BG = TOOLBAR_BG;
 
 	SDL_Color c = TOOLBAR_FG,
@@ -687,7 +682,7 @@ void Display_TransformCamera(int x, int y) {
 	}
 }
 
-void Display_ResetCamera() {
+void Display_ResetCamera(void) {
 	int i;
 	for (i = 0; i < comp_count; ++i) {
 		component * c = comps + i;
@@ -709,7 +704,7 @@ void Display_ResetCamera() {
 	TRANSFORM_Y = 0;
 }
 
-void Display_RenderGrid() {
+void Display_RenderGrid(void) {
 	if (!GRID_FLAG) return;
 
 	int x = (GRID_SIZE+TRANSFORM_X)%GRID_SIZE,
