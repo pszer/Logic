@@ -24,9 +24,13 @@ extern void      * COMP_HANDLES[MAX_COMP_DEFS];
 extern int LOGIC_PAUSE;
 extern int LOGIC_FRAME;
 
+// set by Logic_DefineComps to signal finished thread
+extern int __dfndone;
+extern char* __dfnstr;
+
 // compiles and loads all components on comp
 // (calls DefineCompFile for all files in a folder)
-void Logic_DefineComps();
+void* Logic_DefineComps(void*);
 void Logic_FreeDefines();
 
 /* takes component filename (without folder prefix)

@@ -14,23 +14,34 @@ wire* wires = NULL;
 int LOGIC_PAUSE = 0;
 int LOGIC_FRAME = 0;
 
-void Logic_DefineComps() {
+int __dfndone;
+char* __dfnstr;
+
+void* Logic_DefineComps(void* _v) {
 	DIR * d;
 	struct dirent * dir;
 
+	//__dfndone = 0;
+
 	d = opendir(COMP_PATH);
 
-	if (!d) return;
+	if (!d) {
+		__dfndone = 1;
+		return NULL;
+	}
 
 	while ((dir = readdir(d)) != NULL) {
 		if (dir->d_type == DT_REG) {
+			__dfnstr = dir->d_name;
 			Logic_DefineCompFile(dir->d_name);
 
 			if (COMP_DEF_COUNT == MAX_COMP_DEFS) break;
 		}
 	}
 
+	__dfndone = 1;
 	closedir(d);
+	return NULL;
 }
 
 // takes component filename (without folder prefix)

@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <pthread.h>
+
 #include <SDL2/SDL.h>
 
 #include "event.h"

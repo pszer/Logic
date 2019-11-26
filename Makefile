@@ -5,7 +5,7 @@ CFLAGS=-I$(IDIR) -std=c11 -O3 -D_DEFAULT_SOURCE
 ODIR=src/obj
 SDIR=src
 
-LIBS=-lSDL2 -lSDL2_image -lSDL2_ttf -lm -ldl
+LIBS=-lSDL2 -lSDL2_image -lSDL2_ttf -lm -ldl -pthread
 
 _DEPS = core.h event.h render.h comp.h tex.h logic.h display.h save.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))

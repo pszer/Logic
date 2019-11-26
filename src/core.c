@@ -53,11 +53,28 @@ int Core_Init(int argc, char ** argv) {
 
 	Render_LoadFont();
 
-	Render_Clear();
-	Render_Text("Compiling...",WIN_W/2,WIN_H/2,ALIGN_MIDDLE, NULL);
-	Render_Update();
-
-	Logic_DefineComps();
+	pthread_t t;
+	// make in seperate thread, otherwise launch in same
+	// thread
+	__dfndone = 0;
+	if (pthread_create(&t, NULL, Logic_DefineComps, NULL)) {
+		Logic_DefineComps(NULL);
+		Render_Clear();
+		Render_Text("Compiling...",WIN_W/2,WIN_H/2,ALIGN_MIDDLE, NULL);
+		Render_Update();
+	} else {
+		while (!__dfndone) {
+			int w,h;
+			while (SDL_PollEvent(&EVENT));
+			SDL_GetWindowSize(WINDOW, &w, &h);
+			Render_Clear();
+			//Render_Text("Compiling...",w/2,h/2,ALIGN_MIDDLE, NULL);
+			Render_Text(__dfnstr,w/2,h/2,ALIGN_MIDDLE, NULL);
+			Render_Update();
+			SDL_Delay(15);
+		}
+		pthread_join(t, NULL);
+	}
 
 	Logic_AllocateComponents(START_COMP_SIZE);
 	Logic_AllocateWires(START_WIRE_SIZE);
