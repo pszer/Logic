@@ -1,28 +1,32 @@
-#define NAME "XOR"
-#define IOFF "img/XOR.png"
-#define ION  "img/XORon.png"
+#define NAME "RESISTOR (4 DELAY)"
+#define IOFF "img/RESIST.png"
+#define ION  "img/RESIST.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);
+//void destroy(component * c);
 
 void update(component* c, int frame) {
-	c->out[0].state = c->in[0].state != c->in[1].state;
+	c->var <<= 1;
+	c->var += c->in[0].state;
+
+	c->out[0].state = (c->var&0x08) ? 1 : 0;
 	c->state = c->out[0].state;
 }
 
-component c_XOR = {
+component c_RESISTOR = {
 	NAME,
 	0,         //int state
-	0,0,24,24, //int x,y,w,h
+	0,0,25,13, //int x,y,w,h
 
 	//img_off, img_on
 	  IOFF   , ION,  
 
-	2,1,       //in_count, out_count
+	1,1,       //in_count, out_count
 
 	//0 x y NULL
-	{{0, 3 , 6}, {0, 3, 18} }, //nodes in 
-	{{0, 24, 12}}, //nodes out
+	{{0, 0 , 6}}, //nodes in 
+	{{0, 25, 6}}, //nodes out
 
 	0, //int rotation;
 	0, //int var;
@@ -34,5 +38,5 @@ component c_XOR = {
 };
 
 component* __load__() {
-	return &c_XOR;
+	return &c_RESISTOR;
 }

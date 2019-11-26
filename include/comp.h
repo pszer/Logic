@@ -48,7 +48,7 @@ struct component {
 	long long var;
 
 	/* optional functions */
-	void (*update)(component*);
+	void (*update)(component*, int);
 	void (*render)(component*, SDL_Renderer*, texture*, int);
 	//                        button ms
 	void (*click) (component*, int, int);

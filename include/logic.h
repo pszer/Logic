@@ -22,6 +22,7 @@ extern component * COMP_DEFS[MAX_COMP_DEFS];
 extern void      * COMP_HANDLES[MAX_COMP_DEFS];
 
 extern int LOGIC_PAUSE;
+extern int LOGIC_FRAME;
 
 // compiles and loads all components on comp
 // (calls DefineCompFile for all files in a folder)

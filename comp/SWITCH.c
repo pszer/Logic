@@ -9,7 +9,7 @@ void click (component* c, int state, int ms) {
 		c->var = !c->var;
 }
 
-void update(component* c) {
+void update(component* c, int frame) {
 	c->state = c->var;
 	c->out[0].state = c->state;
 }
@@ -31,9 +31,9 @@ component c_SWITCH = {
 	0, //int rotation;
 	0, //int var;
 
-	update, //void (*update)(component*);
-	NULL,            //void (*render)(component*);
-	click,   //void (*click) (component*, int, int);
+	update,       //void (*update)(component*, int frame);
+	NULL,         //void (*render)(component*);
+	click,        //void (*click) (component*, int, int);
 	NULL          //void (*destroy)(component*);
 };
 

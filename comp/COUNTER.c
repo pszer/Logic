@@ -40,7 +40,7 @@ void render(component* c, SDL_Renderer * R, texture* texs, int tc) {
 
 //void click (component*, int state, int ms);
 
-void update(component* c) {
+void update(component* c, int frame) {
 	c->var = c->in[0].state*0x40 +
 	         c->in[1].state*0x20 +
 	         c->in[2].state*0x10 +
@@ -74,7 +74,7 @@ component c_COUNTER = {
 	0, //int rotation;
 	0, //int var;
 
-	update,       //void (*update)(component*);
+	update,       //void (*update)(component*, int frame);
 	render,       //void (*render)(component*);
 	NULL,         //void (*click) (component*, int, int);
 	NULL          //void (*destroy)(component*);

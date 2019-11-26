@@ -12,6 +12,7 @@ int wire_count = 0, wire_size = 0;
 wire* wires = NULL;
 
 int LOGIC_PAUSE = 0;
+int LOGIC_FRAME = 0;
 
 void Logic_DefineComps() {
 	DIR * d;
@@ -291,6 +292,8 @@ void Logic_Update() {
 	}
 
 	Logic_UpdateComponents();
+
+	++LOGIC_FRAME;
 }
 
 void Logic_NullInputNodes() {
@@ -306,7 +309,7 @@ void Logic_NullInputNodes() {
 void Logic_UpdateComponents() {
 	for (int i = 0; i < comp_count; ++i) {
 		if (comps[i].update) {
-			comps[i].update(comps+i);
+			comps[i].update(comps+i, LOGIC_FRAME);
 		}
 	}
 }

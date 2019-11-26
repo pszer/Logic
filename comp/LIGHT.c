@@ -5,7 +5,7 @@
 //void render(component*);
 //void click (component*, int state, int ms);
 
-void update(component* c) {
+void update(component* c, int frame) {
 	c->state = c->in[0].state;
 }
 
@@ -26,7 +26,7 @@ component c_LIGHT = {
 	0, //int rotation;
 	0, //int var;
 
-	update, //void (*update)(component*);
+	update,       //void (*update)(component*, int frame);
 	NULL,         //void (*render)(component*);
 	NULL,         //void (*click) (component*, int, int);
 	NULL          //void (*destroy)(component*);
