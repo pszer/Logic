@@ -48,8 +48,6 @@ int Core_Init(int argc, char ** argv) {
 	int count = Texture_LoadFolder(RENDER, "img");
 	if (count == -1)
 		return 1;
-	else
-		printf("Loaded %i textures\n", count);
 
 	Render_LoadFont();
 

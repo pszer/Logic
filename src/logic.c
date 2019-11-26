@@ -63,7 +63,7 @@ int Logic_DefineCompFile(const char * fname) {
 	// path = 'COMP_PATH/fname'
 	strcpy(path, COMP_PATH);
 	strcat(path, fname);
-	printf("loading component '%s'\n", path);
+	//printf("loading component '%s'\n", path);
 
 	const int output_len = cpso_len + fn_len + 5;
 	char* output = malloc(sizeof(char) * output_len);
