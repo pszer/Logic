@@ -195,7 +195,22 @@ int Save_LoadComponent(component* c, FILE* f) {
 	for (i = 0; i < COMP_DEF_COUNT; ++i) {
 		if (strcmp(COMP_DEFS[i]->name, str) == 0) {
 			*c = *COMP_DEFS[i];
+			break;
 		}
+	}
+
+	// if no component found
+	if (i == COMP_DEF_COUNT) {
+		char name[33];
+		char* c;
+		for (c = str; *c && c-str<32; ++c) {
+			name[c-str]=*c;
+		}
+		name[c-str]='\0';
+
+		strcpy(SAVE_ERROR, "Unknown component ");
+		strcat(SAVE_ERROR, name);
+		return 0;
 	}
 
 	uint32_t x,y;
