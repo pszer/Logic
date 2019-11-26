@@ -18,9 +18,10 @@ int CANVAS_WIREHOVER = -1;
 int CANVAS_NODECOMPHOVER = -1;
 int CANVAS_NODEHOVER = -1;
 
-SDL_Rect TITLE_SAVE   = { 59,0,12,12 };
-SDL_Rect TITLE_LOAD   = { 46,0,12,12 };
-SDL_Rect TITLE_DELETE = { 26,0,12,12 };
+SDL_Rect TITLE_SAVE   = { 72,0,12,12 };
+SDL_Rect TITLE_LOAD   = { 59,0,12,12 };
+SDL_Rect TITLE_DELETE = { 39,0,12,12 };
+SDL_Rect TITLE_HOME   = { 26,0,12,12 };
 SDL_Rect TITLE_GRID   = { 13,0,12,12 };
 SDL_Rect TITLE_PAUSE  = { 0, 0,12,12 };
 
@@ -35,6 +36,8 @@ SDL_Rect TYPING_RECT = {20,42,360,16};
 
 char NOTIF_BUFFER[NOTIF_TEXTBOX_SIZE+1] = "";
 int NOTIF_TEXTBOX = 0;
+
+int TRANSFORM_X=0, TRANSFORM_Y=0;
  
 int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh) {
 	int a,b;
@@ -263,6 +266,8 @@ int Display_InputCheckTitleBar() {
 		LOGIC_PAUSE = !LOGIC_PAUSE;
 	} else if (RectMouseCollision( UNRECT(TITLE_GRID) )) {
 		GRID_FLAG = !GRID_FLAG;
+	} else if (RectMouseCollision( UNRECT(TITLE_HOME) )) {
+		Display_ResetCamera();
 	} else if (RectMouseCollision( UNRECT(TITLE_DELETE) )) {
 		Logic_DeleteAll();
 	} else if (RectMouseCollision( UNRECT(TITLE_SAVE ))) {
@@ -356,6 +361,12 @@ int Display_InputCheckCanvas() {
 			CANVAS_WIREHOVER = i;
 			break;
 		}
+	}
+
+	if (CANVAS_COMPADD==-1 && CANVAS_COMPMOVE==-1 &&
+	    !CANVAS_WIREFLAG && MOUSE1==MOUSE_HELD)
+	{
+		Display_TransformCamera(-MOUSEDX, -MOUSEDY);
 	}
 
 	return 1;
@@ -488,6 +499,7 @@ void Display_EnterPopup() {
 			strcpy(NOTIF_BUFFER, SAVE_ERROR);
 		}
 	}
+
 	Display_QuitPopup();
 }
 
@@ -513,7 +525,7 @@ void Display_RenderTitle() {
 	if (!LOGIC_PAUSE)
 		++count;
 
-	SDL_Rect VP = {80,0,WIN_W,TITLE_HEIGHT};
+	SDL_Rect VP = {90,0,WIN_W,TITLE_HEIGHT};
 	SDL_RenderSetViewport(RENDER, &VP);
 	Render_Text("Logic", (count) % (WIN_W+40)-40,-1, ALIGN_LEFT, &FG);
 	SDL_RenderSetViewport(RENDER, NULL);
@@ -527,6 +539,8 @@ void Display_RenderTitle() {
 		NULL, &TITLE_GRID, 0.0);
 	// delete button
 	Render_Texture(TITLE_DELETE_IMG, NULL, &TITLE_DELETE, 0.0);
+	// home button
+	Render_Texture(TITLE_HOME_IMG, NULL, &TITLE_HOME, 0.0);
 
 	// save button
 	Render_Texture(TITLE_SAVE_IMG, NULL, &TITLE_SAVE, 0.0);
@@ -651,16 +665,62 @@ void Display_RenderToolbox() {
 	  WIN_W, TITLE_HEIGHT+TOOLBAR_HEIGHT+1, &c);
 }
 
+void Display_TransformCamera(int x, int y) {
+	TRANSFORM_X -= x;
+	TRANSFORM_Y -= y;
+
+	int i;
+	for (i = 0; i < comp_count; ++i) {
+		component * c = comps + i;
+
+		c->x -= x;
+		c->y -= y;
+	}
+
+	for (i = 0; i < wire_count; ++i) {
+		wire * w = wires + i;
+
+		w->x1 -= x;
+		w->y1 -= y;
+		w->x2 -= x;
+		w->y2 -= y;
+	}
+}
+
+void Display_ResetCamera() {
+	int i;
+	for (i = 0; i < comp_count; ++i) {
+		component * c = comps + i;
+
+		c->x -= TRANSFORM_X;
+		c->y -= TRANSFORM_Y;
+	}
+
+	for (i = 0; i < wire_count; ++i) {
+		wire * w = wires + i;
+
+		w->x1 -= TRANSFORM_X;
+		w->y1 -= TRANSFORM_Y;
+		w->x2 -= TRANSFORM_X;
+		w->y2 -= TRANSFORM_Y;
+	}
+
+	TRANSFORM_X = 0;
+	TRANSFORM_Y = 0;
+}
+
 void Display_RenderGrid() {
 	if (!GRID_FLAG) return;
 
-	int x,y;
+	int x = (GRID_SIZE+TRANSFORM_X)%GRID_SIZE,
+	    y = (GRID_SIZE+TRANSFORM_Y)%GRID_SIZE;
 	SDL_Color GC = GRID_COLOR;
 
-	for (y = GRID_SIZE+TOOLBAR_HEIGHT+TITLE_HEIGHT; y < WIN_H; y += GRID_SIZE) {
-		for (x = GRID_SIZE; x < WIN_W; x += GRID_SIZE) {
-			Render_Line(x,0,x,WIN_H, &GC);
-			Render_Line(0,y,WIN_W,y, &GC);
-		}
+	for (; x < WIN_W; x += GRID_SIZE) {
+		Render_Line(x,0,x,WIN_H, &GC);
+	}
+
+	for (; y < WIN_H; y += GRID_SIZE) {
+		Render_Line(0,y,WIN_W,y, &GC);
 	}
 }

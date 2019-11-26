@@ -1,8 +1,10 @@
 #include "save.h"
+#include "display.h"
 
 char SAVE_ERROR[64] = "";
 
 int Save_LoadFile(char * fname) {
+
 	char * full_path = malloc(
 		sizeof(char)*(strlen(SAVE_PATH) + strlen(fname))+1);
 	strcpy(full_path, SAVE_PATH);
@@ -55,6 +57,9 @@ int Save_LoadFile(char * fname) {
 			goto err;
 		}
 	}
+
+	TRANSFORM_X = 0;
+	TRANSFORM_Y = 0;
 
 	// delete current components
 	Logic_FreeComponents();
@@ -155,7 +160,7 @@ int Save_WriteComponent(component* c, FILE* f) {
 	// write string
 	fwrite(c->name, sizeof(char), len, f);
 
-	uint32_t x = c->x, y = c->y;
+	uint32_t x = c->x - TRANSFORM_X, y = c->y - TRANSFORM_Y;
 	// write position
 	fwrite(&x, sizeof(x), 1, f);
 	fwrite(&y, sizeof(x), 1, f);

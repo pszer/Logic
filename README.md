@@ -7,6 +7,7 @@ Logic circuit simulator
 Click and drag components on the toolbar onto the canvas.
 Click and drag on component nodes to create wires.
 Click and drag on a placed component to move it.
+Click and drag on the canvas to move view.
 
 Right click on a component/wire to destroy it.
 
@@ -18,7 +19,8 @@ Right click while moving a component to rotate it.
 Some components can be clicked.
 
 Buttons in top-left corner can be clicked.
-In order, they are pause/play simulation, toggle grid, delete all components, load from file, save from file.
+In order, they are pause/play simulation, toggle grid, reset camera view to home,
+delete all components, load from file, save from file.
 
 # Saving and loading circuits
 

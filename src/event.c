@@ -18,6 +18,9 @@ int WIN_W, WIN_H; // set at core init and win event
  * updates some event flags
  */
 void Event_Update() {
+	MOUSEDX = 0;
+	MOUSEDY = 0;
+
 	if (MOUSE1 == MOUSE_NULL) {
 		MOUSE1DUR = 0;
 	} else {
@@ -49,8 +52,10 @@ void Event_HandleWindow() {
 }
 
 void Event_HandleMouse() {
+	int oldx = MOUSEX, oldy = MOUSEY;
 	SDL_GetMouseState(&MOUSEX, &MOUSEY);
-	SDL_GetRelativeMouseState(&MOUSEDX, &MOUSEDY);
+	MOUSEDX += MOUSEX-oldx;
+	MOUSEDY += MOUSEY-oldy;
 }
 
 void Event_HandleButtonDown() {

@@ -17,7 +17,7 @@
 
 #define TOOLBAR_SCROLL_W 10
 
-#define GRID_COLOR {0x25,0x25,0x25,0xff}
+#define GRID_COLOR {0x2A,0x2A,0x2A,0xff}
 #define GRID_SIZE 60
 
 extern int TOOLBAR_SCROLL;
@@ -62,6 +62,7 @@ extern int NOTIF_TEXTBOX;
 #define TITLE_PLAY_IMG    "img/ICON_PLAY.png"
 #define TITLE_SAVE_IMG    "img/ICON_SAVE.png"
 #define TITLE_LOAD_IMG    "img/ICON_LOAD.png"
+#define TITLE_HOME_IMG    "img/ICON_HOME.png"
 
 // button rectangles
 extern SDL_Rect TITLE_DELETE;
@@ -69,6 +70,8 @@ extern SDL_Rect TITLE_GRID;
 extern SDL_Rect TITLE_PAUSE;
 extern SDL_Rect TITLE_SAVE;
 extern SDL_Rect TITLE_LOAD;
+
+extern int TRANSFORM_X, TRANSFORM_Y;
 
 extern int GRID_FLAG;
 
@@ -101,6 +104,9 @@ void Display_BackspacePopup();
 void Display_TypePopup(char * text);
 void Display_QuitPopup();
 void Display_EnterPopup();
+
+void Display_TransformCamera(int x, int y);
+void Display_ResetCamera();
 
 int  __Display_InputCheckNode(component* c);
 void __Display_FinishWireMake();

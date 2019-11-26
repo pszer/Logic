@@ -7,8 +7,6 @@ TTF_Font * FONT = NULL;
 
 SDL_Color BG = DEF_BG_COLOR;
 
-int yep;
-
 /* sets rendering color */
 void Render_SetColor(SDL_Color* C) {
 	if (!C) return;
@@ -37,7 +35,7 @@ void Render_FreeFont() {
 /* renders aliased colored line */
 void Render_Line(int x1, int y1, int x2, int y2, SDL_Color* C) {
 	Render_SetColor(C);
-	SDL_RenderDrawLine(RENDER, x1,y1, x2,y2);
+	SDL_RenderDrawLine(RENDER, x1, y1, x2, y2);
 }
 
 /* renders colored rectangle */
