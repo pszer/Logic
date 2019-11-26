@@ -44,7 +44,7 @@ Libraries required are 'SDL2', 'SDL2_image' and 'SDL2_ttf'.
 Check your distribution mantainer for how to install these libraries.
 
 # Custom Components
-The simulator builds all the components stored in the 'comps/' folder.
+The simulator builds all the components stored in the 'comp/' folder.
 It builds the C file and calls \_\_load\_\_() to get the component defined in the file.
 
 Example File (AND.c)
@@ -57,7 +57,7 @@ Example File (AND.c)
 //void click (component*, int state, int ms);
 //void destroy(component*);
 
-void update(component* c) {
+void update(component* c, int frame) {
 	c->out[0].state = c->in[0].state && c->in[1].state;
 	c->state = c->out[0].state;
 }
@@ -79,7 +79,7 @@ component c_AND = {
 	0, //int rotation;
 	0, //long long var;
 
-	update,       //void (*update)(component*);
+	update,       //void (*update)(component*, int frame);
 	NULL,         //void (*render)(component*, SDL_Renderer*, texture*, int);
 	NULL,         //void (*click) (component*, int, int);
 	NULL,         //void (*destroy)(component*);
@@ -108,7 +108,8 @@ The offset is the offset from the parent components position.
 The four last entries are function pointers, they are all *optional*, but you will want an
 update function 99.9% guaranteed.
 
-The update function is called every frame.
+The update function is called every frame, the frame argument passed in is the current
+frame that the logic simulation is on (can be used for synchronisation).
 
 The render function is called when the component is being rendered, allowing for custom rendering
 (if a render function is set, the components image will NOT be drawn, only its nodes). The arguments given
@@ -126,10 +127,11 @@ not work.**
 
 **\_\_load\_\_() MUST return a pointer to the components struct specification you just made**
 
-'include/comp.h' is pre-included for you.
+'include/comp.h' is pre-included for you. Component struct definition is in this header file.
 For custom rendering capabilities you must put
 ```
 #include <SDL2/SDL.h>
 #include "tex.h"
 ```
-in your component file.
+in your component file. Look at the SDL2 wiki to see how to render with an SDL_Renderer* and
+textures.
