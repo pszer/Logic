@@ -52,8 +52,8 @@ It builds the C file and calls \_\_load\_\_() to get the component defined in th
 Example File (AND.c)
 ```
 #define NAME "AND"
-#define IOFF "img/AND.png"
-#define ION  "img/ANDon.png"
+#define IOFF "AND.png"
+#define ION  "ANDon.png"
 
 //void render(component*, SDL_Renderer* R, texture* texs, int tex_count);
 //void click (component*, int state, int ms);
