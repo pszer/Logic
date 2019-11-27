@@ -1,6 +1,6 @@
 #define NAME "LIGHT"
-#define IOFF "img/LIGHT.png"
-#define ION  "img/LIGHTon.png"
+#define IOFF "LIGHT.png"
+#define ION  "LIGHTon.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

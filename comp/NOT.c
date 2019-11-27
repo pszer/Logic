@@ -1,6 +1,6 @@
 #define NAME "NOT"
-#define IOFF "img/NOT.png"
-#define ION  "img/NOTon.png"
+#define IOFF "NOT.png"
+#define ION  "NOTon.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

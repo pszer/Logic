@@ -1,8 +1,8 @@
 #include <SDL2/SDL_timer.h>
 
 #define NAME "CLOCK (1/4 hz)"
-#define IOFF "img/CLOCK4.png"
-#define ION  "img/CLOCK4.png"
+#define IOFF "CLOCK4.png"
+#define ION  "CLOCK4.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

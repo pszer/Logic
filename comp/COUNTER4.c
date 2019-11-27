@@ -4,10 +4,10 @@
 #include "tex.h"
 
 #define NAME "COUNTER 4-BIT"
-#define IOFF "img/counter4.png"
-#define ION  "img/counter4.png"
+#define IOFF "counter4.png"
+#define ION  "counter4.png"
 
-#define NUM "img/DIG#.png"
+#define NUM "DIG#.png"
 
 SDL_Texture * find_tex(texture* texs, int tc, char * name) {
 	int i;
@@ -29,12 +29,12 @@ void render(component* c, SDL_Renderer * R, texture* texs, int tc) {
 	r.h=21;
 
 	if (c->var >= 10) {
-		str[7]='0' + (c->var/10)%10;
+		str[3]='0' + (c->var/10)%10;
 		SDL_RenderCopy(R, find_tex(texs,tc,str), NULL, &r);
 	}
 
 	r.x = c->x+30;
-	str[7] = '0' + (c->var%10);
+	str[3] = '0' + (c->var%10);
 	SDL_RenderCopy(R, find_tex(texs,tc,str), NULL, &r);
 }
 

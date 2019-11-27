@@ -1,6 +1,6 @@
 #define NAME "TOGGLE"
-#define IOFF "img/TOGGLE.png"
-#define ION  "img/TOGGLEon.png"
+#define IOFF "TOGGLE.png"
+#define ION  "TOGGLEon.png"
 
 //void render(component* c, SDL_Renderer * R, texture* texs, int tc) {
 //void click (component*, int state, int ms);

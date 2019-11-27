@@ -1,6 +1,6 @@
 #define NAME "NAND"
-#define IOFF "img/NAND.png"
-#define ION  "img/NANDon.png"
+#define IOFF "NAND.png"
+#define ION  "NANDon.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

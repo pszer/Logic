@@ -1,6 +1,6 @@
 #define NAME "NOR4"
-#define IOFF "img/NOR4.png"
-#define ION  "img/NOR4on.png"
+#define IOFF "NOR4.png"
+#define ION  "NOR4on.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

@@ -55,14 +55,14 @@ extern SDL_Rect POPUP_RECT;
 extern char NOTIF_BUFFER[NOTIF_TEXTBOX_SIZE+1];
 extern int NOTIF_TEXTBOX;
 
-#define TITLE_DELETE_IMG  "img/ICON_DELETE.png"
-#define TITLE_GRIDON_IMG  "img/ICON_GRID.png"
-#define TITLE_GRIDOFF_IMG "img/ICON_GRIDOFF.png"
-#define TITLE_PAUSE_IMG   "img/ICON_PAUSE.png"
-#define TITLE_PLAY_IMG    "img/ICON_PLAY.png"
-#define TITLE_SAVE_IMG    "img/ICON_SAVE.png"
-#define TITLE_LOAD_IMG    "img/ICON_LOAD.png"
-#define TITLE_HOME_IMG    "img/ICON_HOME.png"
+#define TITLE_DELETE_IMG  "ICON_DELETE.png"
+#define TITLE_GRIDON_IMG  "ICON_GRID.png"
+#define TITLE_GRIDOFF_IMG "ICON_GRIDOFF.png"
+#define TITLE_PAUSE_IMG   "ICON_PAUSE.png"
+#define TITLE_PLAY_IMG    "ICON_PLAY.png"
+#define TITLE_SAVE_IMG    "ICON_SAVE.png"
+#define TITLE_LOAD_IMG    "ICON_LOAD.png"
+#define TITLE_HOME_IMG    "ICON_HOME.png"
 
 // button rectangles
 extern SDL_Rect TITLE_DELETE;

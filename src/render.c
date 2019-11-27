@@ -122,7 +122,7 @@ void Render_Component(component* c) {
 		if (hovered && -i-1 == CANVAS_NODEHOVER) {
 			SDL_Rect hover_rect = {x+w/2-8,y+h/2-8,16,16};
 			Render_Rect(x,y,w,h, &hover);
-			Render_Texture("img/hover.png", NULL, &hover_rect, 0.0);
+			Render_Texture("hover.png", NULL, &hover_rect, 0.0);
 		} else {
 			Render_Rect(x,y,w,h, c->in[i].state ? &on_color : &color);
 		}
@@ -134,7 +134,7 @@ void Render_Component(component* c) {
 		if (hovered && i == CANVAS_NODEHOVER) {
 			SDL_Rect hover_rect = {x+w/2-8,y+h/2-8,16,16};
 			Render_Rect(x,y,w,h, &hover);
-			Render_Texture("img/hover.png", NULL, &hover_rect, 0.0);
+			Render_Texture("hover.png", NULL, &hover_rect, 0.0);
 		} else {
 			Render_Rect(x,y,w,h, c->out[i].state ? &on_color : &color);
 		}

@@ -1,6 +1,6 @@
 #define NAME "AND4"
-#define IOFF "img/AND4.png"
-#define ION  "img/AND4on.png"
+#define IOFF "AND4.png"
+#define ION  "AND4on.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

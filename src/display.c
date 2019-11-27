@@ -135,7 +135,7 @@ void Display_Render(void) {
 		} else {
 			r = (SDL_Rect){w->x1-8,w->y2-8,16,16};
 		}
-		Render_Texture("img/hover.png", NULL, &r, 0.0);
+		Render_Texture("hover.png", NULL, &r, 0.0);
 	}
 
 	if (TOOLBAR_COMPHOVER != -1) {

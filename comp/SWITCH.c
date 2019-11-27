@@ -1,6 +1,6 @@
 #define NAME "SWITCH"
-#define IOFF "img/switch.png"
-#define ION  "img/switchon.png"
+#define IOFF "switch.png"
+#define ION  "switchon.png"
 
 //void render(component*);
 

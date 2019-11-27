@@ -1,6 +1,6 @@
 #define NAME "RESISTOR (4 DELAY)"
-#define IOFF "img/RESIST.png"
-#define ION  "img/RESIST.png"
+#define IOFF "RESIST.png"
+#define ION  "RESIST.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

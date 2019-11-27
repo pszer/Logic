@@ -1,6 +1,6 @@
 #define NAME "OR4"
-#define IOFF "img/OR4.png"
-#define ION  "img/OR4on.png"
+#define IOFF "OR4.png"
+#define ION  "OR4on.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

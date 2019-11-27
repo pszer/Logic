@@ -1,6 +1,6 @@
 #define NAME "NXOR"
-#define IOFF "img/NXOR.png"
-#define ION  "img/NXORon.png"
+#define IOFF "NXOR.png"
+#define ION  "NXORon.png"
 
 //void render(component*);
 //void click (component*, int state, int ms);

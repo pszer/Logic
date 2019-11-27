@@ -66,9 +66,15 @@ int Texture_Load(SDL_Renderer * r, char * filename) {
 
 	SDL_QueryTexture(t.img, NULL, NULL, &t.w, &t.h);
 
-	int s = sizeof(char) * (strlen(filename)+1);
+	int fl = strlen(filename);
+	int slash_index = fl-1; 
+	for (; slash_index >= 0; --slash_index)
+		if (filename[slash_index] == '/') break;
+
+	int len = fl-slash_index;
+	int s = sizeof(char) * (len+1);
 	t.name = malloc(s);
-	memcpy(t.name, filename, s);
+	memcpy(t.name, filename+slash_index+1, s);
 
 	textures[textures_loaded] = t;
 
