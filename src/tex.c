@@ -3,6 +3,73 @@
 int textures_loaded=0;
 texture textures[MAX_TEXTURES];
 
+tex_tree * tex_search_tree = NULL;
+
+int String_LessThan(const char* a, const char* b) {
+	const char * c = a, * d = b;
+	while (1) {
+		if (!*c &&  *d) return -1; // ab  < abc
+		if ( *c && !*d) return  1; // abc > ab
+		if (!*c && !*d) return  0; // abc = abc
+
+		if (*c < *d) return -1; // a < b
+		if (*c > *d) return  1; // b > a
+
+		// *c==*d if no checks above happened
+
+		// check next character
+		++c;
+		++d;
+	}
+}
+
+tex_tree * Texture_CreateTree(texture * tex) {
+	tex_tree * tree = malloc(sizeof(tex_tree));
+	if (!tree) return NULL;
+
+	tree->tex      = tex;
+	tree->left     = NULL;
+	tree->right    = NULL;
+
+	return tree;
+}
+
+void Texture_AddTree (tex_tree * tree, texture * tex) {
+	int comp = String_LessThan(tree->tex->name, tex->name);
+
+	if (comp == -1) {
+		if (tree->left)
+			Texture_AddTree(tree->left, tex);
+		else
+			tree->left = Texture_CreateTree(tex);
+	} else if (comp == 1) {
+		if (tree->right)
+			Texture_AddTree(tree->right, tex);
+		else
+			tree->right = Texture_CreateTree(tex);
+	}
+}
+
+void Texture_FreeTree (tex_tree * tree) {
+	if (tree->left) Texture_FreeTree(tree->left);
+	if (tree->right) Texture_FreeTree(tree->right);
+
+	free(tree);
+}
+
+texture * Texture_TreeFind(tex_tree * tree, char * name) {
+	int comp = String_LessThan(tree->tex->name, name);
+
+	if (comp == 0)
+		return tree->tex;
+	else if (comp == -1 && tree->left )
+		return Texture_TreeFind(tree->left, name);
+	else if (comp ==  1 && tree->right)
+		return Texture_TreeFind(tree->right, name);
+
+	return NULL;
+}
+
 int Texture_LoadFolder(SDL_Renderer * r, char * folder) {
 	DIR * d;
 	struct dirent * dir;
@@ -38,6 +105,8 @@ int Texture_LoadFolder(SDL_Renderer * r, char * folder) {
 }
 
 void Texture_FreeAll() {
+	if (tex_search_tree) Texture_FreeTree(tex_search_tree);
+
 	for (int i = 0; i < textures_loaded; ++i) {
 		Texture_Free(textures + i);
 	}
@@ -53,6 +122,10 @@ texture * Texture_Get(char * name) {
 	}
 
 	return NULL;
+}
+
+texture * Texture_FastGet(char * name) {
+	return Texture_TreeFind(tex_search_tree, name);	
 }
 
 int Texture_Load(SDL_Renderer * r, char * filename) {
@@ -77,6 +150,11 @@ int Texture_Load(SDL_Renderer * r, char * filename) {
 	memcpy(t.name, filename+slash_index+1, s);
 
 	textures[textures_loaded] = t;
+
+	if (tex_search_tree)
+		Texture_AddTree(tex_search_tree, textures + textures_loaded);
+	else
+		tex_search_tree = Texture_CreateTree(textures + textures_loaded);
 
 	++textures_loaded;
 	return 1;

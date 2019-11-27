@@ -78,7 +78,7 @@ void Render_Text(const char* text, int x, int y, int align, SDL_Color* c) {
 void Render_Texture(char * tname,
 	SDL_Rect* src, SDL_Rect* dest, double rotation)
 {
-	texture * t = Texture_Get(tname);	
+	texture * t = Texture_FastGet(tname);	
 	if (!t) return;
 
 	SDL_RenderCopyEx(RENDER, t->img,
