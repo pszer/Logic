@@ -41,6 +41,12 @@ extern int CANVAS_WIREHOVER;
 extern int CANVAS_NODECOMPHOVER;
 extern int CANVAS_NODEHOVER;
 
+extern int CANVAS_SELECTING;
+extern int CANVAS_SELECT_X;
+extern int CANVAS_SELECT_Y;
+extern int CANVAS_SELECT_COUNT;
+extern int * CANVAS_SELECTION;
+
 #define POPUP_SAVING_TEXT  "Save to where (in saves/)"
 #define POPUP_LOADING_TEXT "Load from where (in saves/)"
 #define POPUP_ENTER_TEXT   "[press ENTER] [click outside popup to cancel]"
@@ -76,6 +82,8 @@ extern int TRANSFORM_X, TRANSFORM_Y;
 extern int GRID_FLAG;
 
 int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh);
+int RectRectCollision(int x1, int y1, int w1, int h1,
+	int x2, int y2, int w2, int h2);
 int RectMouseCollision(int rx, int ry, int rw, int rh);
 int WirePointCollision(int x, int y, wire * w);
 int WireMouseCollision(wire * w);
@@ -87,6 +95,10 @@ void Display_RenderGrid(void);
 
 void Display_RenderSavePopup(void);
 void Display_RenderLoadPopup(void);
+
+void Display_StartSelection();
+void Display_FinishSelection();
+void Display_FreeSelection();
 
 void Display_Update(void);
 void Display_NullFlags(void);

@@ -10,7 +10,7 @@ char MOUSE1 = MOUSE_NULL, MOUSE2 = MOUSE_NULL;
 int M1S,M2S; // start tick for mouse button down
 int MOUSE1DUR=0, MOUSE2DUR=0;
 
-char BACKSPACE=0, ENTER=0;
+char BACKSPACE=0, ENTER=0, DELETE=0;
 
 int WIN_W, WIN_H; // set at core init and win event
 
@@ -39,6 +39,7 @@ void Event_Update() {
 
 	if (BACKSPACE) BACKSPACE = 0;
 	if (ENTER) ENTER = 0;
+	if (DELETE) DELETE = 0;
 }
 
 // event update handlers
@@ -82,6 +83,9 @@ void Event_HandleKeyDown() {
 		break;
 	case SDLK_RETURN:
 		ENTER = 1;
+		break;
+	case SDLK_DELETE:
+		DELETE = 1;
 		break;
 	}
 }

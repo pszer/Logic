@@ -45,6 +45,8 @@ int Core_Init(int argc, char ** argv) {
 		if (!RENDER) ERR();
 	}
 
+	SDL_SetRenderDrawBlendMode(RENDER, SDL_BLENDMODE_BLEND);
+
 	int count = Texture_LoadFolder(RENDER, "img");
 	if (count == -1)
 		return 1;
@@ -90,6 +92,8 @@ void Core_Quit() {
 	Logic_FreeDefines();
 	Logic_FreeComponents();
 	Logic_FreeWires();
+
+	Display_FreeSelection();
 
 	Render_FreeFont();
 

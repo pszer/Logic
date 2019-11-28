@@ -1,9 +1,5 @@
 #include "display.h"
 
-int TOOLBAR_SCROLL = 0;
-int TOOLBAR_LHOVER = 0, TOOLBAR_RHOVER = 0;
-int TOOLBAR_COMPHOVER=-1;
- 
 int CANVAS_COMPMOVE=-1;
 int C_CMOVE_OX = 0, C_CMOVE_OY = 0;
 
@@ -17,6 +13,16 @@ int CANVAS_COMPROT=0;
 int CANVAS_WIREHOVER = -1;
 int CANVAS_NODECOMPHOVER = -1;
 int CANVAS_NODEHOVER = -1;
+
+int CANVAS_SELECTING = 0;
+int CANVAS_SELECT_X = 0;
+int CANVAS_SELECT_Y = 0;
+int CANVAS_SELECT_COUNT=0;
+int * CANVAS_SELECTION=NULL;
+
+int TOOLBAR_SCROLL = 0;
+int TOOLBAR_LHOVER = 0, TOOLBAR_RHOVER = 0;
+int TOOLBAR_COMPHOVER=-1;
 
 SDL_Rect TITLE_SAVE   = { 72,0,12,12 };
 SDL_Rect TITLE_LOAD   = { 59,0,12,12 };
@@ -54,6 +60,15 @@ int RectPointCollision(int x, int y, int rx, int ry, int rw, int rh) {
 	}
 
 	return a&&b;
+}
+
+int RectRectCollision(int x1, int y1, int w1, int h1,
+	int x2, int y2, int w2, int h2)
+{
+	return !(x1+w1 < x2) &&
+	       !(x1 > x2+w2) &&
+	       !(y1+h1 < y2) &&
+	       !(y1 > y2+h2);
 }
 
 int RectMouseCollision(int rx, int ry, int rw, int rh) {
@@ -143,6 +158,15 @@ void Display_Render(void) {
 		  MOUSEX, MOUSEY);
 	}
 
+	// if currently making selection
+	if (CANVAS_SELECTING) {
+		SDL_Color C = {0xff,0xff,0x00,0xff};
+		Render_RectLine(CANVAS_SELECT_X, CANVAS_SELECT_Y,
+		  MOUSEX - CANVAS_SELECT_X, MOUSEY - CANVAS_SELECT_Y, &C);
+		Render_RectLine(CANVAS_SELECT_X+1, CANVAS_SELECT_Y+1,
+		  MOUSEX - CANVAS_SELECT_X-2, MOUSEY - CANVAS_SELECT_Y-2, &C);
+	}
+
 	if (POPUP_SAVING)
 		Display_RenderSavePopup();
 	if (POPUP_LOADING)
@@ -177,6 +201,10 @@ void Display_Update(void) {
 	if (MOUSE1 == MOUSE_UP) {
 		CANVAS_COMPMOVE = -1;
 
+		if (CANVAS_SELECTING) {
+			Display_FinishSelection();
+		}
+
 		if (CANVAS_WIREFLAG)
 			__Display_FinishWireMake();
 
@@ -195,6 +223,22 @@ void Display_Update(void) {
 	}
 
 	if (CANVAS_COMPMOVE != -1) {
+		if (CANVAS_SELECTION) {
+			int i;
+			printf("\n");
+			for (i = 0; i < CANVAS_SELECT_COUNT; ++i) {
+				int index = CANVAS_SELECTION[i];
+
+				if (index == CANVAS_COMPMOVE) continue;
+
+				int xoff = comps[CANVAS_COMPMOVE].x - comps[index].x;
+				int yoff = comps[CANVAS_COMPMOVE].y - comps[index].y;
+
+				comps[index].x = MOUSEX - C_CMOVE_OX - xoff;
+				comps[index].y = MOUSEY - C_CMOVE_OY - yoff;
+			}
+		}
+
 		comps[CANVAS_COMPMOVE].x = MOUSEX - C_CMOVE_OX;
 		comps[CANVAS_COMPMOVE].y = MOUSEY - C_CMOVE_OY;
 		Logic_UpdateAllWirePos();
@@ -203,6 +247,15 @@ void Display_Update(void) {
 	if (CANVAS_WIREFLAG) {
 		CANVAS_WIREMAKE.x2 = MOUSEX;
 		CANVAS_WIREMAKE.y2 = MOUSEY;
+	}
+
+	if (CANVAS_SELECTION && DELETE) {
+		int i;
+		for (i = CANVAS_SELECT_COUNT-1; i >= 0; --i) {
+			int index = CANVAS_SELECTION[i];
+			Logic_DeleteComponent(index);
+		}
+		Display_FreeSelection();
 	}
 }
 
@@ -223,9 +276,29 @@ void Display_RightClick(void) {
 	}
 
 	if (CANVAS_COMPMOVE != -1) {
-		component * c = comps + CANVAS_COMPMOVE;
-		c->rotation++;
-		c->rotation %= 4;
+		if (!CANVAS_SELECTION) {
+			component * c = comps + CANVAS_COMPMOVE;
+			c->rotation++;
+			c->rotation %= 4;
+		} else {
+			int mx = comps[CANVAS_COMPMOVE].x + comps[CANVAS_COMPMOVE].w/2;
+			int my = comps[CANVAS_COMPMOVE].y + comps[CANVAS_COMPMOVE].h/2;
+
+			int i;
+			for (i = 0; i < CANVAS_SELECT_COUNT; ++i) {
+				int index = CANVAS_SELECTION[i];
+
+				int dx = comps[index].x + comps[index].w/2 - mx;
+				int dy = comps[index].y + comps[index].h/2 - my;
+
+				int temp = dx;
+				dx = -dy;
+				dy = temp;
+
+				comps[index].x = mx + dx - comps[index].w/2;
+				comps[index].y = my + dy - comps[index].h/2;
+			}
+		}
 		return;
 	}
 
@@ -358,12 +431,61 @@ int Display_InputCheckCanvas(void) {
 
 	// drag view across screen
 	if (CANVAS_COMPADD==-1 && CANVAS_COMPMOVE==-1 &&
-	    !CANVAS_WIREFLAG && MOUSE1==MOUSE_HELD)
+	    !CANVAS_WIREFLAG)
 	{
-		Display_TransformCamera(-MOUSEDX, -MOUSEDY);
+		if (MOUSE2 == MOUSE_HELD) {
+			Display_TransformCamera(-MOUSEDX, -MOUSEDY);
+		} else if (MOUSE1 == MOUSE_HELD) {
+			if (!CANVAS_SELECTING)
+				Display_StartSelection();
+		} else if (MOUSE1 == MOUSE_DOWN) {
+			Display_FreeSelection();
+		}
 	}
 
 	return 1;
+}
+
+void Display_StartSelection() {
+	CANVAS_SELECTING = 1;
+	CANVAS_SELECT_X = MOUSEX;
+	CANVAS_SELECT_Y = MOUSEY;
+}
+
+void Display_FinishSelection() {
+	if (!CANVAS_SELECTING) return;
+
+	CANVAS_SELECTING = 0;
+	CANVAS_SELECTION = NULL;
+	CANVAS_SELECT_COUNT = 0;
+
+	int i;
+	for (i = 0; i < comp_count; ++i) {
+		int temp;
+		int x = CANVAS_SELECT_X, y = CANVAS_SELECT_Y,
+		    w = MOUSEX-x, h = MOUSEY-y;
+		// make sure widths and heights are positive
+		if (w<0) {
+			w = -w; x -= w; }
+		if (h<0) {
+			h = -h; y -= h; }
+
+		component * c = comps + i;
+
+		if (RectRectCollision(x,y,w,h, c->x, c->y, c->w, c->h)) {
+			++CANVAS_SELECT_COUNT;
+			CANVAS_SELECTION = realloc(CANVAS_SELECTION,
+			  sizeof(int) * CANVAS_SELECT_COUNT);
+			CANVAS_SELECTION[CANVAS_SELECT_COUNT-1] = i;
+		}
+	}
+}
+
+void Display_FreeSelection() {
+	CANVAS_SELECTING = 0;
+	CANVAS_SELECT_COUNT = 0;
+	if (CANVAS_SELECTION) free(CANVAS_SELECTION);
+	CANVAS_SELECTION = NULL;
 }
 
 int __Display_InputCheckNode(component* c) {
@@ -663,6 +785,9 @@ void Display_RenderToolbox(void) {
 void Display_TransformCamera(int x, int y) {
 	TRANSFORM_X -= x;
 	TRANSFORM_Y -= y;
+
+	CANVAS_SELECT_X -= x;
+	CANVAS_SELECT_Y -= y;
 
 	int i;
 	for (i = 0; i < comp_count; ++i) {

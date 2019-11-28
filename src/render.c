@@ -109,6 +109,16 @@ void Render_Component(component* c) {
 	if (!c) return;
 
 	int hovered = (c-comps) == CANVAS_NODECOMPHOVER;
+	int selected = 0;
+	if (CANVAS_SELECTION) {
+		int i;
+		for (i = 0; i < CANVAS_SELECT_COUNT; ++i) {
+			if (c-comps == CANVAS_SELECTION[i]) {
+				selected = 1;
+				break;
+			}
+		}
+	}
 
 	// render nodes
 	SDL_Color color    = {0xff,0xff,0xff,0xff},
@@ -152,6 +162,11 @@ void Render_Component(component* c) {
 			Render_Texture(c->img_off,NULL,&rect,rot);
 		if (c->state && c->img_on)
 			Render_Texture(c->img_on,NULL,&rect,rot);
+	}
+
+	if (selected) {
+		SDL_Color C = {0xff,0xff,0x00,0x60};
+		Render_Rect(c->x, c->y, c->w, c->h, &C);
 	}
 }
 
