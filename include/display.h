@@ -47,6 +47,8 @@ extern int CANVAS_SELECT_Y;
 extern int CANVAS_SELECT_COUNT;
 extern int * CANVAS_SELECTION;
 
+extern int CANVAS_COMP_DELETE;
+
 #define POPUP_SAVING_TEXT  "Save to where (in saves/)"
 #define POPUP_LOADING_TEXT "Load from where (in saves/)"
 #define POPUP_ENTER_TEXT   "[press ENTER] [click outside popup to cancel]"
@@ -111,6 +113,7 @@ int Display_InputCheckCanvas(void);
 
 void Display_LeftClick(void);
 void Display_RightClick(void);
+void Display_RightUp(void);
 
 void Display_PopupUpdate(void);
 void Display_BackspacePopup(void);

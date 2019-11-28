@@ -20,6 +20,8 @@ int CANVAS_SELECT_Y = 0;
 int CANVAS_SELECT_COUNT=0;
 int * CANVAS_SELECTION=NULL;
 
+int CANVAS_COMP_DELETE=-1;
+
 int TOOLBAR_SCROLL = 0;
 int TOOLBAR_LHOVER = 0, TOOLBAR_RHOVER = 0;
 int TOOLBAR_COMPHOVER=-1;
@@ -220,6 +222,8 @@ void Display_Update(void) {
 
 	if (MOUSE2 == MOUSE_DOWN) {
 		Display_RightClick();
+	} else if (MOUSE2 == MOUSE_UP) {
+		Display_RightUp();
 	}
 
 	if (CANVAS_COMPMOVE != -1) {
@@ -315,10 +319,31 @@ void Display_RightClick(void) {
 	for (i = 0; i < comp_count; ++i) {
 		component * c = comps+i;
 		if (RectMouseCollision(c->x,c->y,c->w,c->h)) {
-			Logic_DeleteComponent(i);
+			//Logic_DeleteComponent(i);
+			CANVAS_COMP_DELETE = i;
 			return;
 		}
 	}
+}
+
+void Display_RightUp(void) {
+	if (CANVAS_COMP_DELETE != -1) {
+		component * c = comps + CANVAS_COMP_DELETE;
+		if (RectMouseCollision(c->x,c->y,c->w,c->h)) {
+			Logic_DeleteComponent(CANVAS_COMP_DELETE);
+
+			// update selection indices
+			if (CANVAS_SELECTION) {
+				int i;
+				for (i = 0; i < CANVAS_SELECT_COUNT; ++i) {
+					int index = CANVAS_SELECTION[i];
+					if (index > CANVAS_COMP_DELETE)
+						--CANVAS_SELECTION[i];
+				}
+			}
+		}
+	}
+	CANVAS_COMP_DELETE = -1;
 }
 
 int Display_InputCheckTitleBar(void) {
@@ -431,9 +456,9 @@ int Display_InputCheckCanvas(void) {
 		}
 	}
 
-	// drag view across screen
+	// drag view across screen (if didnt click on component)
 	if (CANVAS_COMPADD==-1 && CANVAS_COMPMOVE==-1 &&
-	    !CANVAS_WIREFLAG)
+	    !CANVAS_WIREFLAG && CANVAS_COMP_DELETE==-1)
 	{
 		if (MOUSE2 == MOUSE_HELD) {
 			Display_TransformCamera(-MOUSEDX, -MOUSEDY);
