@@ -225,7 +225,6 @@ void Display_Update(void) {
 	if (CANVAS_COMPMOVE != -1) {
 		if (CANVAS_SELECTION) {
 			int i;
-			printf("\n");
 			for (i = 0; i < CANVAS_SELECT_COUNT; ++i) {
 				int index = CANVAS_SELECTION[i];
 
