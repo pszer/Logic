@@ -2,7 +2,7 @@
 #define IOFF "NAND4.png"
 #define ION  "NAND4on.png"
 
-//void render(component*);
+//void render(component*, SDL_Renderer*);
 //void click (component*, int state, int ms);
 
 void update(component* c, int frame) {

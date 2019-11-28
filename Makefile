@@ -1,6 +1,7 @@
 IDIR =include
 CC=clang
 CFLAGS=-I$(IDIR) -std=c11 -O3 -D_DEFAULT_SOURCE
+AR=llvm-ar
 
 ODIR=src/obj
 SDIR=src
@@ -17,11 +18,9 @@ OUTPUT = logic
 
 $(ODIR)/%.o: $(SDIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
-make: $(OBJ)
-	$(CC) -o $(OUTPUT) $^ $(CFLAGS) $(LIBS)
 		
 debug: $(OBJ)
-	$(CC) -g -o $(OUTPUT) $^ $(CFLAGS) $(LIBS) 
+	$(CC) -g -o $(OUTPUT) $^ $(CFLAGS) $(LIBS) -rdynamic
 
 .PHONY: clean
 

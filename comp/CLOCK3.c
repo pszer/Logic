@@ -4,7 +4,7 @@
 #define IOFF "CLOCK3.png"
 #define ION  "CLOCK3.png"
 
-//void render(component*);
+//void render(component*, SDL_Renderer*);
 //void click (component*, int state, int ms);
 //void destroy(component * c);
 

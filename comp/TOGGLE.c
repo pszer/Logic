@@ -2,7 +2,7 @@
 #define IOFF "TOGGLE.png"
 #define ION  "TOGGLEon.png"
 
-//void render(component* c, SDL_Renderer * R, texture* texs, int tc) {
+//void render(component* c, SDL_Renderer * R) {
 //void click (component*, int state, int ms);
 //void destroy(component * c);
 

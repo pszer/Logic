@@ -55,7 +55,7 @@ Example File (AND.c)
 #define IOFF "AND.png"
 #define ION  "ANDon.png"
 
-//void render(component*, SDL_Renderer* R, texture* texs, int tex_count);
+//void render(component*, SDL_Renderer* R);
 //void click (component*, int state, int ms);
 //void destroy(component*);
 
@@ -82,7 +82,7 @@ component c_AND = {
 	0, //long long var;
 
 	update,       //void (*update)(component*, int frame);
-	NULL,         //void (*render)(component*, SDL_Renderer*, texture*, int);
+	NULL,         //void (*render)(component*, SDL_Renderer*);
 	NULL,         //void (*click) (component*, int, int);
 	NULL,         //void (*destroy)(component*);
 };
@@ -114,8 +114,8 @@ The update function is called every frame, the frame argument passed in is the c
 frame that the logic simulation is on (can be used for synchronisation).
 
 The render function is called when the component is being rendered, allowing for custom rendering
-(if a render function is set, the components image will NOT be drawn, only its nodes). The arguments given
-are the rendering context, an array to the current loaded textures and how many textures are loaded.
+(if a render function is set, the components image will NOT be drawn, only its nodes). The argument
+given is the current SDL2 rendering context. Rendering functions are avaiable in "include/render.h" (you can include them with #include "render.h").
 
 The click function is called when a component is left clicked, the second argument is the STATE,
 -1 for inital left button click frame, 0 for when it's held and 1 for the button up frame. The
@@ -133,7 +133,7 @@ not work.**
 For custom rendering capabilities you must put
 ```
 #include <SDL2/SDL.h>
-#include "tex.h"
+#include "render.h"
 ```
-in your component file. Look at the SDL2 wiki to see how to render with an SDL_Renderer* and
-textures.
+in your component file. Look at the SDL2 wiki to see how to render with an SDL\_Renderer\* or use
+the rendering functions given in 'include/render.h'.

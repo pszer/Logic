@@ -2,7 +2,7 @@
 #define IOFF "MULTIPLEX.png"
 #define ION  "MULTIPLEX.png"
 
-//void render(component*);
+//void render(component*, SDL_Renderer*);
 //void click (component*, int state, int ms);
 //void destroy(component * c);
 

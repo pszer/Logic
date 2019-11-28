@@ -2,7 +2,7 @@
 #define IOFF "XOR.png"
 #define ION  "XORon.png"
 
-//void render(component*);
+//void render(component*, SDL_Renderer*);
 //void click (component*, int state, int ms);
 
 void update(component* c, int frame) {

@@ -49,7 +49,7 @@ struct component {
 
 	/* optional functions */
 	void (*update)(component*, int);
-	void (*render)(component*, SDL_Renderer*, texture*, int);
+	void (*render)(component*, SDL_Renderer*);
 	//                        button ms
 	void (*click) (component*, int, int);
 	void (*destroy)(component*); // called when destroyed

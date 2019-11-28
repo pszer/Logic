@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 #include <SDL2/SDL.h>
-#include "tex.h"
+#include "render.h"
 
 #define NAME "TALLY 7-BIT"
 #define IOFF "tally.png"
@@ -10,19 +10,11 @@
 
 #define NUM "DIG#.png"
 
-SDL_Texture * find_tex(texture* texs, int tc, char * name) {
-	int i;
-	for (i = 0; i < tc; ++i) {
-		if (!strcmp(texs[i].name, name)) return texs[i].img;
-	}
-	return NULL;
-}
-
-void render(component* c, SDL_Renderer * R, texture* texs, int tc) {
+void render(component* c, SDL_Renderer * R) {
 	char str[] = NUM;
 
 	SDL_Rect r = {c->x, c->y, c->w, c->h};
-	SDL_RenderCopy(R, find_tex(texs,tc,IOFF), NULL, &r);
+	Render_Texture(IOFF, NULL, &r, 0.0);
 
 	r.x=c->x+17;
 	r.y=c->y+5;
@@ -31,12 +23,12 @@ void render(component* c, SDL_Renderer * R, texture* texs, int tc) {
 
 	if (c->var >= 10) {
 		str[3]='0' + (c->var/10)%10;
-		SDL_RenderCopy(R, find_tex(texs,tc,str), NULL, &r);
+		Render_Texture(str, NULL, &r, 0.0);
 	}
 
 	r.x = c->x+30;
 	str[3] = '0' + (c->var%10);
-	SDL_RenderCopy(R, find_tex(texs,tc,str), NULL, &r);
+	Render_Texture(str, NULL, &r, 0.0);
 }
 
 //void click (component*, int state, int ms);

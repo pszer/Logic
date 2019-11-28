@@ -2,7 +2,7 @@
 #define IOFF "switch.png"
 #define ION  "switchon.png"
 
-//void render(component*);
+//void render(component*, SDL_Renderer*);
 
 void click (component* c, int state, int ms) {
 	if (state == 1 && ms < 300)

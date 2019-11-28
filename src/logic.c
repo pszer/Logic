@@ -77,12 +77,12 @@ int Logic_DefineCompFile(const char * fname) {
 
 	// compiler command
 	char* cc_com = malloc(sizeof(char)*
-	  (path_len+output_len+80));
+	  (path_len+output_len+100));
 	strcpy(cc_com, "cc -std=c99 -O0 \"");
 	strcat(cc_com, path);
 	strcat(cc_com, "\" -o \"");
 	strcat(cc_com, output);
-	strcat(cc_com, "\" -shared -fPIC -Iinclude -include include/comp.h -lSDL2");
+	strcat(cc_com, "\" -shared -fPIC -Iinclude -include include/comp.h -lSDL2 ");
 
 	// compile component
 	//printf("%s\n", cc_com);
