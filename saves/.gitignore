@@ -3,5 +3,6 @@
 !1bitadder.save
 !2bitadder.save
 !4bitadder.save
+!alu.save
 !nand.save
 !.gitignore
