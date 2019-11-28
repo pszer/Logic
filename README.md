@@ -4,10 +4,15 @@ Logic circuit simulator
 ![Screenshot](logic.png)
 
 # Controls
-Click and drag components on the toolbar onto the canvas.
-Click and drag on component nodes to create wires.
-Click and drag on a placed component to move it.
-Click and drag on the canvas to move view.
+Left click and drag components on the toolbar onto the canvas.
+Left click and drag on component nodes to create wires.
+Left click and drag on a placed component to move it.
+Left click and drag on canvas to make a selection.
+
+Right click and drag on the canvas to move view.
+While a selection is made, left click and drag on a component to move it,
+right click while moving a component to rotate entire selection, press delete
+key to delete selection.
 
 Right click on a component/wire to destroy it.
 
