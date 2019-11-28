@@ -335,14 +335,17 @@ int Display_InputCheckTitleBar(void) {
 		Display_ResetCamera();
 	} else if (RectMouseCollision( UNRECT(TITLE_DELETE) )) {
 		Logic_DeleteAll();
+		Display_FreeSelection();
 	} else if (RectMouseCollision( UNRECT(TITLE_SAVE ))) {
 		Display_QuitPopup();
 		POPUP_SAVING = 1;
 		SDL_StartTextInput();
+		Display_FreeSelection();
 	} else if (RectMouseCollision( UNRECT(TITLE_LOAD ))) {
 		Display_QuitPopup();
 		POPUP_LOADING = 1;
 		SDL_StartTextInput();
+		Display_FreeSelection();
 	}
 
 	#undef UNRECT
