@@ -153,7 +153,6 @@ void Render_Component(component* c) {
 	// render component
 	if (c->render) {
 		c->render(c, RENDER);
-		return;
 	} else {
 		SDL_Rect rect = {c->x, c->y, c->w, c->h};
 		double rot = c->rotation * 90.0;
