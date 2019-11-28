@@ -39,6 +39,8 @@ void* Logic_DefineComps(void* _v) {
 		}
 	}
 
+	Logic_SortDefines();
+
 	__dfndone = 1;
 	closedir(d);
 	return NULL;
@@ -124,6 +126,40 @@ int Logic_DefineCompFile(const char * fname) {
 	++COMP_DEF_COUNT;
 
 	return 1;
+}
+
+int __sle(const char* a, const char* b) {
+	const char * c = a, * d = b;
+	while (1) {
+		if (!*c &&  *d) return -1; // ab  < abc
+		if ( *c && !*d) return  1; // abc > ab
+		if (!*c && !*d) return  0; // abc = abc
+
+		if (*c < *d) return -1; // a < b
+		if (*c > *d) return  1; // b > a
+
+		// *c==*d if no checks above happened
+
+		// check next character
+		++c;
+		++d;
+	}
+}
+
+void Logic_SortDefines() {
+	int i,j;
+
+	for (i = COMP_DEF_COUNT-1; i > 0; --i) {
+		for (j = 0; j < i; ++j) {
+			if (__sle(COMP_DEFS[ j ]->name,
+			          COMP_DEFS[j+1]->name) == 1)
+			{
+				component * temp = COMP_DEFS[ j ];
+				COMP_DEFS[ j ] = COMP_DEFS[j+1];
+				COMP_DEFS[j+1] = temp;
+			}
+		}
+	}
 }
 
 // if comps is already allocated, it reallocates it

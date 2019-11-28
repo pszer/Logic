@@ -32,6 +32,7 @@ extern char* __dfnstr;
 // (calls DefineCompFile for all files in a folder)
 void* Logic_DefineComps(void*);
 void Logic_FreeDefines();
+void Logic_SortDefines();
 
 /* takes component filename (without folder prefix)
  * and adds it to definitions

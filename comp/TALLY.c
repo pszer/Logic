@@ -43,7 +43,7 @@ void update(component* c, int frame) {
 	// if reset
 	if (c->in[1].state) {
 		c->var = 0;
-		c->state = 0;
+		c->state = 1;
 	} else {
 		c->state = (c->state<<1) + c->in[0].state;
 		//c->state = (c->state<<1) + c->state;
