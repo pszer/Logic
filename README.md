@@ -137,8 +137,8 @@ not work.**
 'include/comp.h' is pre-included for you. Component struct definition is in this header file.
 For custom rendering capabilities you must put
 ```
-#include <SDL2/SDL.h>
 #include "render.h"
 ```
 in your component file. Look at the SDL2 wiki to see how to render with an SDL\_Renderer\* or use
-the rendering functions given in 'include/render.h'.
+the rendering functions given in 'include/render.h'. Example of custom rendering can be seen in
+the counter/tally components.
