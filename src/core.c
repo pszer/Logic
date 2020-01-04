@@ -53,6 +53,7 @@ int Core_Init(int argc, char ** argv) {
 
 	Render_LoadFont();
 
+	int w = WIN_W, h = WIN_H;
 	pthread_t t;
 	// make in seperate thread, otherwise launch in same
 	// thread
@@ -64,7 +65,6 @@ int Core_Init(int argc, char ** argv) {
 		Render_Update();
 	} else {
 		while (!__dfndone) {
-			int w,h;
 			while (SDL_PollEvent(&EVENT));
 			SDL_GetWindowSize(WINDOW, &w, &h);
 			Render_Clear();
@@ -75,6 +75,10 @@ int Core_Init(int argc, char ** argv) {
 		}
 		pthread_join(t, NULL);
 	}
+
+	// update if window changed size during compilation
+	WIN_W = w;
+	WIN_H = h;
 
 	Logic_AllocateComponents(START_COMP_SIZE);
 	Logic_AllocateWires(START_WIRE_SIZE);
