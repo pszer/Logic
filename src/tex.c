@@ -142,7 +142,11 @@ int Texture_Load(SDL_Renderer * r, char * filename) {
 	int fl = strlen(filename);
 	int slash_index = fl-1; 
 	for (; slash_index >= 0; --slash_index)
+	#ifdef __MINGW32__
+		if (filename[slash_index] == '\\') break;
+	#else
 		if (filename[slash_index] == '/') break;
+	#endif
 
 	int len = fl-slash_index;
 	int s = sizeof(char) * (len+1);

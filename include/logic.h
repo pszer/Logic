@@ -5,10 +5,29 @@
 #include <string.h>
 #include <stdio.h>
 
+/*#ifdef __MINGW32__
+  #include <windows.h>
+#endif*/
+
 #include "comp.h"
 
-#define COMP_PATH    "comp/"
-#define COMP_SO_PATH "comp/so/"
+#ifdef __MINGW32__
+ #define COMP_PATH    "comp\\"
+ #define COMP_SO_PATH "comp\\so\\"
+#else
+ #define COMP_PATH    "comp/"
+ #define COMP_SO_PATH "comp/so/"
+#endif
+
+/*#ifdef __linux__
+  #define LIBTYPE void*
+  #define OPENLIB(libname) dlopen((libname), RTLD_LAZY)
+  #define LIBFUNC(lib, fn) dlsym((lib), (fn))
+#elif defined(WINVER)
+  #define LIBTYPE HINSTANCE
+  #define OPENLIB(libname) LoadLibraryW(L ## libname)
+  #define LIBFUNC(lib, fn) GetProcAddress((lib), (fn))
+#endif*/
 
 #define MAX_COMP_DEFS 64
 
