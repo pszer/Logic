@@ -26,5 +26,3 @@ debug: $(OBJ)
 
 clean:
 	rm -f $(ODIR)/*.o *~ core $(INCDIR)/*~
-
--include $(OBJ:.o=.d)

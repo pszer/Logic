@@ -31,17 +31,12 @@ void* Logic_DefineComps(void* _v) {
 	}
 
 	while ((dir = readdir(d)) != NULL) {
-		#ifndef __MINGW32__
 		if (dir->d_type == DT_REG) {
-		#endif
 			__dfnstr = dir->d_name;
 			Logic_DefineCompFile(dir->d_name);
 
 			if (COMP_DEF_COUNT == MAX_COMP_DEFS) break;
-
-		#ifndef __MINGW32__
 		}
-		#endif
 	}
 
 	Logic_SortDefines();
@@ -86,20 +81,11 @@ int Logic_DefineCompFile(const char * fname) {
 	char* cc_com = malloc(sizeof(char)*
 	  (path_len+output_len+100));
 
-
-#ifdef __MINGW32__
-	strcpy(cc_com, "winegcc -std=c99 -O0 \"");
-	strcat(cc_com, path);
-	strcat(cc_com, "\" -o \"");
-	strcat(cc_com, output);
-	strcat(cc_com, "\" -shared -fPIC -Iinclude -include include\\comp.h -lSDL2 ");
-#else
 	strcpy(cc_com, "cc -std=c99 -O0 \"");
 	strcat(cc_com, path);
 	strcat(cc_com, "\" -o \"");
 	strcat(cc_com, output);
 	strcat(cc_com, "\" -shared -fPIC -Iinclude -include include/comp.h -lSDL2 ");
-#endif
 
 	// compile component
 	//printf("%s\n", cc_com);
