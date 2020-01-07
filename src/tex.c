@@ -151,7 +151,7 @@ int Texture_Load(SDL_Renderer * r, char * filename) {
 	int len = fl-slash_index;
 	int s = sizeof(char) * (len+1);
 	t.name = malloc(s);
-	memcpy(t.name, filename+slash_index+1, s);
+	strcpy(t.name, filename+slash_index+1);
 
 	textures[textures_loaded] = t;
 
